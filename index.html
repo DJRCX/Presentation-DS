@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design C — Editorial Refined (Final Presentation Edition) | SE 223 Healthcare DB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Preserved Exact Editorial Refined Palette */
+      --bg: #fafaf8;
+      --ink: #1e1c18;
+      --slate: #2d4a7a;       /* Slate blue header & structural chrome */
+      --blue: #2563eb;        /* Accent blue */
+      --blue-lo: #eff6ff;
+      --amber: #b45309;
+      --amber-lo: #fef3c7;
+      --line: #e0dbd2;
+      --line-hi: #cac4b8;
+      --muted: #8c8680;
+      --muted-hi: #5a554e;
+      --display: 'Syne', sans-serif;
+      --body: 'DM Sans', sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
+    }
+
+    html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--body); overflow: hidden; }
+
+    /* ── SHELL ── */
+    .shell { width: 100vw; height: 100vh; display: flex; flex-direction: column; position: relative; }
+
+    /* ── SLIDE ── */
+    .slide {
+      position: absolute; inset: 0;
+      padding-bottom: 60px; /* Room for seamless bottom bar */
+      display: none; flex-direction: column;
+      animation: fadein 0.35s ease-out;
+      overflow-y: auto;
+    }
+    .slide.active { display: flex; }
+    @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ════════════════════════
+       TITLE SLIDE
+       ════════════════════════ */
+    .layout-title { flex: 1; display: grid; grid-template-columns: 1fr 1fr; }
+
+    .title-l {
+      background: var(--slate);
+      color: white;
+      padding: 4rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .title-l-label {
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      opacity: 0.7; font-weight: 500;
+    }
+    .title-l-h {
+      font-family: var(--display);
+      font-size: clamp(3rem, 6.5vw, 5.8rem);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.025em;
+    }
+    .title-l-meta {
+      font-family: var(--mono); font-size: 0.78rem;
+      opacity: 0.7; line-height: 2;
+    }
+
+    .title-r { padding: 4rem; display: flex; flex-direction: column; justify-content: space-between; }
+    .title-r-label { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.65rem; font-weight: 600; }
+    .member-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .m-item { padding: 0.65rem 1rem; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; font-weight: 500; background: white; }
+    .m-id { font-family: var(--mono); font-size: 0.75rem; color: var(--slate); font-weight: 600; }
+    
+    /* Faculty Info Box */
+    .faculty-box { margin-top: 1.5rem; padding: 1rem 1.25rem; border: 1.5px dashed var(--line-hi); background: #fcfbfa; border-radius: 4px; }
+    .faculty-title { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; font-weight: 700; }
+    .faculty-name { font-family: var(--display); font-size: 1.2rem; font-weight: 700; color: var(--slate); }
+    .faculty-desc { font-size: 0.85rem; color: var(--muted-hi); line-height: 1.4; margin-top: 0.2rem; }
+
+    .date-stamp { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+
+    /* ════════════════════════
+       STANDARD SLIDE LAYOUT
+       ════════════════════════ */
+    .layout-std { flex: 1; display: flex; flex-direction: column; }
+
+    .slide-banner {
+      padding: 1.4rem 3.5rem 1.1rem;
+      border-bottom: 1.5px solid var(--line-hi);
+      display: flex; align-items: flex-end; gap: 2rem;
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .banner-num {
+      font-family: var(--display);
+      font-size: 4.2rem;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--line-hi);
+    }
+    .banner-text { padding-bottom: 0.2rem; flex: 1; }
+    .banner-section { font-family: var(--mono); font-size: 0.7rem; color: var(--slate); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .banner-title {
+      font-family: var(--display);
+      font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .banner-desc { font-family: var(--body); font-size: 0.96rem; color: var(--muted-hi); max-width: 82ch; margin-top: 0.35rem; line-height: 1.5; }
+
+    /* ════════════════════════
+       SCOPE STRIPES (SLIDE 02) WITH LEFT/RIGHT SIDE SPACING & HOVER
+       ════════════════════════ */
+    .scope-stripes {
+      flex: 1; display: flex; flex-direction: column; gap: 0.6rem;
+      padding: 1.2rem 3.5rem 1.5rem; /* Accommodate left and right side spacing! */
+      overflow: hidden;
+    }
+    .stripe-row {
+      display: grid; grid-template-columns: 160px 1fr auto;
+      border: 1.5px solid var(--line-hi);
+      border-radius: 6px;
+      flex: 1;
+      align-items: center;
+      transition: all 0.25s ease;
+      background: white;
+      overflow: hidden;
+    }
+    .scope-stripes:hover .stripe-row { opacity: 0.35; filter: brightness(0.8); transform: scale(0.99); }
+    .scope-stripes .stripe-row:hover {
+      opacity: 1; filter: none;
+      transform: scale(1.018) translateY(-2px);
+      z-index: 10;
+      box-shadow: 0 14px 28px rgba(30, 28, 24, 0.14);
+      border-color: var(--slate);
+    }
+    .stripe-cat {
+      background: var(--slate);
+      color: rgba(255,255,255,0.95);
+      padding: 0 1.5rem; height: 100%;
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      display: flex; align-items: center; font-weight: 600;
+    }
+    .stripe-items { display: flex; align-items: center; padding: 0 2rem; gap: 2.5rem; }
+    .stripe-item { font-size: 1.05rem; color: var(--ink); font-weight: 500; white-space: nowrap; }
+    .stripe-note { padding: 0 2rem; font-family: var(--mono); font-size: 0.78rem; color: var(--slate); font-weight: 600; }
+
+    /* ════════════════════════
+       ENTITY DATA TABLES (BUTTER-SMOOTH ABSOLUTE TRANSITIONS & HIGH-Z HOVER)
+       ════════════════════════ */
+    .entity-cols {
+      flex: 1; display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; padding: 1.25rem 3.5rem 1.5rem;
+      align-items: stretch; position: relative;
+    }
+
+    /* STABLE CELL WRAPPER - ELEVATES Z-INDEX ON HOVER FOR SOLID STACKING */
+    .entity-cols .e-col-wrap:hover,
+    .entity-cols .e-col-wrap.keyboard-hover {
+      z-index: 100; /* Solves transparency bleed-through! Place wrapper on top */
+    }
+
+    .e-card {
+      position: absolute;
+      top: 1.25rem;
+      bottom: 1.5rem;
+      border: 1.5px solid var(--line-hi);
+      border-radius: 6px;
+      background: #ffffff !important; /* 100% Solid Opaque Background */
+      padding: 1.25rem 1.4rem;
+      display: flex; flex-direction: column;
+      opacity: 1;
+      /* Smoothed animation speed and easing curves */
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ABSOLUTE COORDINATES FOR UNHOVERED CARDS */
+    .e-card.c1 { left: 3.5rem; width: calc((100% - 10rem) / 3); }
+    .e-card.c2 { left: calc(3.5rem + (100% - 10rem) / 3 + 1.5rem); width: calc((100% - 10rem) / 3); }
+    .e-card.c3 { right: 3.5rem; width: calc((100% - 10rem) / 3); }
+
+    /* DIM UNSELECTED CARDS ON HOVER */
+    .entity-cols:hover .e-card,
+    .entity-cols.has-keyboard-hover .e-card {
+      opacity: 0.3;
+      filter: brightness(0.68) blur(0.5px);
+      transform: scale(0.97);
+    }
+
+    /* HOVERED STATE: EXPANDS TO VIEWPORT MARGINS, INCREASED HEIGHT & BREATHING ROOM */
+    .entity-cols .e-col-wrap:hover .e-card,
+    .entity-cols .e-col-wrap.keyboard-hover .e-card {
+      opacity: 1 !important;
+      filter: none !important;
+      z-index: 500;
+      left: 3.5rem !important;
+      right: 3.5rem !important;
+      width: calc(100% - 7rem) !important;
+      top: 12% !important; /* Centered with generous vertical padding */
+      bottom: 12% !important;
+      height: auto !important;
+      transform: none !important;
+      background: #ffffff !important;
+      border-color: var(--slate);
+      box-shadow: 0 32px 64px rgba(30, 28, 24, 0.35), 0 0 0 2.5px var(--slate);
+      padding: 1.6rem 2.2rem; /* Increased padding for vertical height breathing room! */
+    }
+
+    .entity-cols .e-col-wrap:hover .e-card.assoc {
+      box-shadow: 0 32px 64px rgba(37, 99, 235, 0.38), 0 0 0 2.5px var(--blue);
+      border-color: var(--blue);
+    }
+
+    .e-name-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 0.5rem; margin-bottom: 0.8rem;
+      border-bottom: 2px solid var(--slate);
+    }
+    .e-name {
+      font-family: var(--display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--slate);
+      transition: font-size 0.3s ease;
+    }
+    .e-badge { font-family: var(--mono); font-size: 0.65rem; background: var(--slate); color: white; padding: 2px 6px; font-weight: 600; border-radius: 2px; }
+
+    /* DATA GRID STYLES */
+    .data-grid {
+      width: 100%; border-collapse: collapse;
+      font-family: var(--mono); font-size: 0.85rem; text-align: left;
+    }
+    .data-grid th {
+      background: #f1f5f9; color: var(--slate);
+      padding: 6px 8px; font-weight: 700;
+      border-bottom: 1.5px solid var(--line);
+      font-size: 0.78rem; letter-spacing: 0.03em;
+      transition: all 0.3s ease;
+    }
+    .data-grid td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink); white-space: nowrap; font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+    .pk-cell { color: var(--blue); font-weight: 600; }
+    .fk-cell { color: var(--amber); font-weight: 600; }
+    .pk-tag { background: var(--blue); color: white; font-size: 0.58rem; padding: 1px 4px; font-weight: 700; border-radius: 2px; margin-left: 4px; }
+    .fk-tag { background: var(--amber-lo); border: 1px solid var(--amber); color: var(--amber); font-size: 0.58rem; padding: 0 4px; font-weight: 700; border-radius: 2px; margin-left: 4px; }
+
+    .e-explain {
+      margin-top: auto; padding-top: 0.8rem;
+      font-size: 0.82rem; color: var(--muted-hi); line-height: 1.45;
+      border-top: 1px dashed var(--line-hi); font-style: italic;
+    }
+    .e-explain strong { font-style: normal; color: var(--slate); font-family: var(--mono); font-size: 0.75rem; font-weight: 600; }
+
+    .e-card.assoc { background: #f4f8ff; border-color: #bfdbfe; }
+    .e-card.assoc .e-name-bar { border-bottom-color: var(--blue); }
+    .e-card.assoc .e-name { color: var(--blue); }
+    .e-card.assoc .e-badge { background: var(--amber); }
+
+    /* HOVER FONT SIZE & TABLE ROW EXPANSION (INCREASES HEIGHT NATURALLY) */
+    .e-col-wrap:hover .e-name,
+    .e-col-wrap.keyboard-hover .e-name { font-size: 1.3rem; }
+    .e-col-wrap:hover .data-grid,
+    .e-col-wrap.keyboard-hover .data-grid { font-size: 1.02rem; }
+    .e-col-wrap:hover .data-grid th,
+    .e-col-wrap.keyboard-hover .data-grid th { font-size: 0.95rem; padding: 10px 16px; }
+    .e-col-wrap:hover .data-grid td,
+    .e-col-wrap.keyboard-hover .data-grid td { font-size: 1.02rem; padding: 10px 16px; }
+    .e-col-wrap:hover .pk-tag, .e-col-wrap:hover .fk-tag,
+    .e-col-wrap.keyboard-hover .pk-tag, .e-col-wrap.keyboard-hover .fk-tag { font-size: 0.68rem; padding: 2px 6px; }
+    .e-col-wrap:hover .e-explain,
+    .e-col-wrap.keyboard-hover .e-explain { font-size: 0.95rem; margin-top: 1rem; padding-top: 0.8rem; }
+
+    /* ════════════════════════
+       ATTRIBUTE ROWS (SLIDE 06) WITH HOVER POP-OUT
+       ════════════════════════ */
+    .attr-rows {
+      flex: 1; display: flex; flex-direction: column; gap: 0.8rem; padding: 1rem 3.5rem 1.5rem;
+    }
+    .attr-rows:hover .attr-row { opacity: 0.35; filter: brightness(0.75); transform: scale(0.98); }
+    .attr-row {
+      flex: 1; border: 1.5px solid var(--line-hi); border-radius: 6px;
+      display: grid; grid-template-columns: 220px 1fr auto; align-items: stretch;
+      background: white; transition: all 0.3s ease;
+    }
+    .attr-rows .attr-row:hover {
+      opacity: 1; filter: none; transform: scale(1.02) translateY(-2px);
+      z-index: 30; border-color: var(--slate); box-shadow: 0 16px 32px rgba(30, 28, 24, 0.18);
+    }
+    .attr-type-col { border-right: 1.5px solid var(--line); padding: 0.9rem 1.2rem; display: flex; flex-direction: column; justify-content: center; }
+    .attr-type-label { font-family: var(--mono); font-size: 0.68rem; color: var(--slate); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .attr-field-name { font-family: var(--display); font-size: 1.1rem; font-weight: 700; color: var(--ink); }
+    .attr-desc-col { padding: 0.9rem 1.4rem; display: flex; flex-direction: column; justify-content: center; font-size: 0.92rem; color: var(--muted-hi); line-height: 1.55; }
+    .attr-desc-col strong { color: var(--ink); font-weight: 600; }
+    .attr-code-col { border-left: 1.5px solid var(--line); padding: 0.9rem 1.4rem; display: flex; align-items: center; background: var(--blue-lo); border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
+    .attr-code-col code { font-family: var(--mono); font-size: 0.78rem; color: var(--blue); font-weight: 600; white-space: nowrap; }
+
+    /* ════════════════════════
+       RULES LAYOUT (SLIDE 11) WITH SIDE SPACING & HOVER RATIO
+       ════════════════════════ */
+    .rules-block { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; padding: 0.5rem 3.5rem 1.5rem; }
+    .rules-block:hover .rule-stripe { opacity: 0.35; filter: brightness(0.75); }
+    .rule-stripe {
+      flex: 1;
+      display: grid; grid-template-columns: 70px 1fr 200px 90px;
+      border: 1.5px solid var(--line-hi); border-radius: 6px;
+      align-items: center; background: white;
+      transition: all 0.25s ease;
+      opacity: 0; transform: translateY(8px);
+      overflow: hidden;
+    }
+    .rule-stripe.visible { opacity: 1; transform: translateY(0); }
+    .rules-block .rule-stripe:hover {
+      opacity: 1; filter: none;
+      transform: scale(1.018) translateY(-2px);
+      z-index: 20;
+      border-color: var(--slate); box-shadow: 0 16px 32px rgba(30, 28, 24, 0.18);
+    }
+    .rule-n-cell { background: var(--slate); color: white; font-family: var(--display); font-size: 1.4rem; font-weight: 700; height: 100%; display: flex; align-items: center; justify-content: center; }
+    .rule-text-cell { padding: 0 2rem; font-size: 0.95rem; line-height: 1.5; color: var(--ink); font-weight: 500; }
+    .rule-enforce-cell { font-family: var(--mono); font-size: 0.75rem; color: var(--slate); font-weight: 600; }
+    .rule-card-cell { padding: 0 1.2rem; display: flex; align-items: center; justify-content: center; }
+    .rule-badge { background: var(--slate); color: white; font-family: var(--mono); font-size: 0.72rem; padding: 0.25rem 0.7rem; font-weight: 600; border-radius: 3px; }
+
+    /* ════════════════════════
+       SCHEMA COLUMNS (SLIDE 10) WITH PERFECT CENTERED HOVER
+       ════════════════════════ */
+    .schema-cols { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; padding: 1.25rem 3.5rem 1.5rem; align-items: stretch; position: relative; }
+
+    .schema-col-wrap { height: 100%; z-index: 1; }
+    .schema-cols .schema-col-wrap:hover,
+    .schema-cols .schema-col-wrap.keyboard-hover { z-index: 100; }
+
+    .schema-card {
+      position: absolute;
+      top: 1.25rem;
+      bottom: 1.5rem;
+      border: 1.5px solid var(--line-hi); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; background: #ffffff;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .schema-card.sc1 { left: 3.5rem; width: calc((100% - 10.6rem) / 4); }
+    .schema-card.sc2 { left: calc(3.5rem + (100% - 10.6rem) / 4 + 1.2rem); width: calc((100% - 10.6rem) / 4); }
+    .schema-card.sc3 { left: calc(3.5rem + 2 * (100% - 10.6rem) / 4 + 2.4rem); width: calc((100% - 10.6rem) / 4); }
+    .schema-card.sc4 { right: 3.5rem; width: calc((100% - 10.6rem) / 4); }
+
+    .schema-cols:hover .schema-card,
+    .schema-cols.has-keyboard-hover .schema-card { opacity: 0.35; filter: brightness(0.75); transform: scale(0.97); }
+
+    .schema-cols .schema-col-wrap:hover .schema-card,
+    .schema-cols .schema-col-wrap.keyboard-hover .schema-card {
+      opacity: 1 !important; filter: none !important;
+      z-index: 500;
+      position: absolute;
+      left: 3.5rem !important;
+      right: 3.5rem !important;
+      width: calc(100% - 7rem) !important;
+      top: 12% !important;
+      bottom: 12% !important;
+      height: auto !important;
+      transform: none !important;
+      background: #ffffff !important;
+      border-color: var(--slate); box-shadow: 0 32px 64px rgba(30, 28, 24, 0.35);
+      padding: 1.4rem 2rem;
+    }
+
+    .schema-col-head { background: var(--slate); color: white; padding: 0.7rem 1.2rem; font-family: var(--display); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; transition: font-size 0.3s ease; }
+    .schema-body { flex: 1; padding: 0.6rem 0; }
+    .schema-field { display: flex; flex-direction: column; padding: 0.45rem 1.2rem; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 0.78rem; transition: font-size 0.3s ease; }
+    .sf-name { color: var(--ink); font-weight: 600; }
+    .sf-meta { font-size: 0.68rem; color: var(--slate); margin-top: 0.15rem; font-weight: 500; }
+
+    .schema-col-wrap:hover .schema-col-head,
+    .schema-col-wrap.keyboard-hover .schema-col-head { font-size: 1.05rem; padding: 0.8rem 1.4rem; }
+    .schema-col-wrap:hover .schema-field,
+    .schema-col-wrap.keyboard-hover .schema-field { font-size: 0.9rem; padding: 0.6rem 1.4rem; }
+    .schema-col-wrap:hover .sf-meta,
+    .schema-col-wrap.keyboard-hover .sf-meta { font-size: 0.78rem; }
+
+    /* ER VIEWER WITH FULL SPACE & SMOOTH HOVER ZOOM */
+    .er-viewer-container {
+      flex: 1;
+      margin: 0.8rem 3.5rem 1.4rem;
+      border: 1.5px solid var(--line-hi);
+      border-radius: 8px;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      box-shadow: 0 4px 20px rgba(30, 28, 24, 0.06);
+    }
+    .er-zoom-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      background: var(--slate);
+      color: white;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      pointer-events: none;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      opacity: 0.85;
+      transition: opacity 0.2s ease;
+    }
+    .er-viewer-container:hover .er-zoom-badge {
+      opacity: 0.3;
+    }
+    #erImg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 1.5rem 4.5rem;
+      transform-origin: center center;
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform-origin 0.05s linear;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ════════════════════════
+       FIXED BOTTOM BAR (BLENDS SEAMLESSLY WITHOUT HARSH BORDER)
+       ════════════════════════ */
+    .bbar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 52px;
+      border-top: none; /* Removed harsh dark border to blend 100% into slide background! */
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 0 3.5rem;
+      background: var(--bg);
+      z-index: 1000;
+    }
+    .bbar-navs { display: flex; gap: 0.4rem; }
+    .bbar-btn {
+      width: 34px; height: 32px; border: 1.5px solid var(--line-hi);
+      border-radius: 4px; background: white; cursor: pointer;
+      font-size: 1.05rem; color: var(--slate); font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .bbar-btn:hover { border-color: var(--slate); background: var(--slate); color: white; }
+    .progress-track { flex: 1; height: 3.5px; background: var(--line); border-radius: 2px; overflow: hidden; }
+    .progress-f { height: 100%; background: var(--slate); transition: width 0.4s ease; border-radius: 2px; }
+    .bbar-counter { font-family: var(--mono); font-size: 0.85rem; color: var(--slate); font-weight: 700; }
+    .bbar-key { font-family: var(--mono); font-size: 0.7rem; color: var(--muted-hi); font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- 01 TITLE (POPULATED WITH FACULTY AND TEAM MEMBERS FROM IMAGES) -->
+  <div class="slide active" id="s1">
+    <div class="layout-title" style="flex:1;">
+      <div class="title-l">
+        <div class="title-l-label">SE 223 · Topic 2 · Database Design</div>
+        <div class="title-l-h">Integrated<br/>Health&shy;care<br/>Network</div>
+        <div class="title-l-meta">
+          SE 223 — Database Design Project Presentation<br/>
+          Daffodil International University<br/>
+          Department of Software Engineering
+        </div>
+      </div>
+      <div class="title-r">
+        <div>
+          <div class="title-r-label">Group 2 Members</div>
+          <div class="member-list">
+            <div class="m-item">Md. Sourav Rana <span class="m-id">ID: 252-35-602</span></div>
+            <div class="m-item">Mahtabul Al Nahian <span class="m-id">ID: 252-35-408</span></div>
+            <div class="m-item">Mst. Afia Tasnim Esha <span class="m-id">ID: 252-35-583</span></div>
+            <div class="m-item">Meherin Ritu <span class="m-id">ID: 252-35-578</span></div>
+            <div class="m-item">Zubayer Watsit Zoha <span class="m-id">ID: 252-35-353</span></div>
+          </div>
+          
+          <div class="faculty-box">
+            <div class="faculty-title">Presented To (Faculty)</div>
+            <div class="faculty-name">Nusrat Jahan Tazin</div>
+            <div class="faculty-desc">
+              Lecturer, Department of Software Engineering<br/>
+              Daffodil International University<br/>
+              Email: nusrattazin.swe@diu.edu.bd &bull; Tel: 01779749972
+            </div>
+          </div>
+        </div>
+        <div class="date-stamp">Integrated Healthcare &amp; Hospital Network — Relational Schema Presentation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 SCENARIO (EXTENDED WITH ALL REALISTIC REQUIREMENTS FROM PDF & CHATGPT) -->
+  <div class="slide" id="s2">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">02</div>
+        <div class="banner-text">
+          <div class="banner-section">Scenario &amp; Scope // System Overview</div>
+          <div class="banner-title">Multi-Facility Healthcare Domain Boundaries</div>
+          <div class="banner-desc">The database unifies independent medical units (hospitals, diagnostic labs, pharmacies, blood banks) into a centralized relational schema to eliminate patient data fragmentation across facilities.</div>
+        </div>
+      </div>
+      <div class="scope-stripes">
+        <div class="stripe-row">
+          <div class="stripe-cat">Hospitals</div>
+          <div class="stripe-items">
+            <span class="stripe-item">Hospitals (Main &amp; Specialized)</span>
+            <span class="stripe-item">Diagnostic Centres</span>
+            <span class="stripe-item">Blood Banks</span>
+            <span class="stripe-item">Laboratories &amp; OTs</span>
+          </div>
+          <div class="stripe-note">12 Facilities Integrated</div>
+        </div>
+        <div class="stripe-row">
+          <div class="stripe-cat">Clinical</div>
+          <div class="stripe-items">
+            <span class="stripe-item">Specialized Departments</span>
+            <span class="stripe-item">Inpatient Wards &amp; ICU Beds</span>
+            <span class="stripe-item">Radiology &amp; Lab Test logs</span>
+            <span class="stripe-item">Pharmacies &amp; Inventories</span>
+          </div>
+          <div class="stripe-note">Real-Time Bed Tracking</div>
+        </div>
+        <div class="stripe-row">
+          <div class="stripe-cat">People</div>
+          <div class="stripe-items">
+            <span class="stripe-item">Registered Patients</span>
+            <span class="stripe-item">Specialist Doctors</span>
+            <span class="stripe-item">Nurses &amp; Ward Staff</span>
+            <span class="stripe-item">Lab Technicians &amp; Blood Donors</span>
+          </div>
+          <div class="stripe-note">Shared Patient ID System</div>
+        </div>
+        <div class="stripe-row">
+          <div class="stripe-cat">Services</div>
+          <div class="stripe-items">
+            <span class="stripe-item">OPD Consultations</span>
+            <span class="stripe-item">Surgical Procedures</span>
+            <span class="stripe-item">Prescriptions &amp; Diagnoses</span>
+            <span class="stripe-item">Ambulance Dispatch Logs</span>
+          </div>
+          <div class="stripe-note">Unified Clinical History</div>
+        </div>
+        <div class="stripe-row">
+          <div class="stripe-cat">Organization</div>
+          <div class="stripe-items">
+            <span class="stripe-item">Vaccination Programs</span>
+            <span class="stripe-item">Donor Registrations</span>
+            <span class="stripe-item">Research Studies</span>
+            <span class="stripe-item">Billing &amp; Claim Processing</span>
+          </div>
+          <div class="stripe-note">Automated Operations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 CORE ENTITIES WITH DEMO DATA -->
+  <div class="slide" id="s3">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">03</div>
+        <div class="banner-text">
+          <div class="banner-section">Main Entities // Master Data Tables</div>
+          <div class="banner-title">Core Entity Catalogue with Live Sample Data</div>
+          <div class="banner-desc">Primary entities storing persistent master records. Their Primary Keys serve as immutable anchors referenced by all operational transaction tables across the network.</div>
+        </div>
+      </div>
+      <div class="entity-cols">
+        <!-- PATIENT TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card c1">
+            <div class="e-name-bar">
+              <span class="e-name">PATIENT</span>
+              <span class="e-badge">MASTER</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Patient_ID <span class="pk-tag">PK</span></th><th>Name</th><th>DOB</th><th>Blood</th><th>Sex</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">P-1001</td><td>John Doe</td><td>1988-04-12</td><td>O+</td><td>M</td></tr>
+                <tr><td class="pk-cell">P-1002</td><td>Jane Smith</td><td>1995-09-23</td><td>A-</td><td>F</td></tr>
+                <tr><td class="pk-cell">P-1003</td><td>Rahim Uddin</td><td>1972-11-05</td><td>B+</td><td>M</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Design Note:</strong> Stores unique demographics. Multivalued phone numbers are extracted to a child table for 1NF compliance.
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCTOR TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card c2">
+            <div class="e-name-bar">
+              <span class="e-name">DOCTOR</span>
+              <span class="e-badge">MASTER</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Doctor_ID <span class="pk-tag">PK</span></th><th>Name</th><th>Specialization</th><th>License</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">D-201</td><td>Dr. S. Khan</td><td>Cardiology</td><td>BMDC-8841</td></tr>
+                <tr><td class="pk-cell">D-202</td><td>Dr. A. Rahman</td><td>Neurology</td><td>BMDC-9210</td></tr>
+                <tr><td class="pk-cell">D-203</td><td>Dr. F. Ahmed</td><td>Pediatrics</td><td>BMDC-7412</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Design Note:</strong> Master list of licensed physicians. Doctors assign treatments and perform surgeries across facilities.
+            </div>
+          </div>
+        </div>
+
+        <!-- HOSPITAL TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card c3">
+            <div class="e-name-bar">
+              <span class="e-name">HOSPITAL</span>
+              <span class="e-badge">MASTER</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Hospital_ID <span class="pk-tag">PK</span></th><th>Hospital_Name</th><th>Location</th><th>Phone</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">H-01</td><td>Central Hospital</td><td>Dhaka North</td><td>+88017001</td></tr>
+                <tr><td class="pk-cell">H-02</td><td>City Care Clinic</td><td>Dhaka South</td><td>+88018002</td></tr>
+                <tr><td class="pk-cell">H-03</td><td>Metro Diagnostics</td><td>Uttara Branch</td><td>+88019003</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Design Note:</strong> Top-level physical facilities hosting clinical departments, wards, pharmacies, and ambulance fleets.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 HOSPITAL INFRASTRUCTURE & M:N RESOLUTION -->
+  <div class="slide" id="s4">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">04</div>
+        <div class="banner-text">
+          <div class="banner-section">Hospital Infrastructure // Relational Modeling</div>
+          <div class="banner-title">Hospital Departments &amp; Doctor M:N Bridge</div>
+          <div class="banner-desc">A doctor can practice in multiple departments across hospitals. This Many-to-Many relationship is resolved using the <code>DOCTOR_DEPARTMENT</code> junction table with a Composite Primary Key.</div>
+        </div>
+      </div>
+      <div class="entity-cols">
+        <!-- DEPARTMENT TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card c1">
+            <div class="e-name-bar">
+              <span class="e-name">DEPARTMENT</span>
+              <span class="e-badge">1:N CHILD</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Dept_ID <span class="pk-tag">PK</span></th><th>Hospital_ID <span class="fk-tag">FK</span></th><th>Dept_Name</th><th>Wing</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">DP-10</td><td class="fk-cell">H-01</td><td>Cardiology</td><td>Wing A</td></tr>
+                <tr><td class="pk-cell">DP-11</td><td class="fk-cell">H-01</td><td>ICU &amp; Critical</td><td>Wing B</td></tr>
+                <tr><td class="pk-cell">DP-20</td><td class="fk-cell">H-02</td><td>Neurology</td><td>Block 2</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>1:N Relationship:</strong> Each department belongs to exactly one Hospital via <code>Hospital_ID FK</code> constraint.
+            </div>
+          </div>
+        </div>
+
+        <!-- ASSOCIATIVE TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card assoc c2">
+            <div class="e-name-bar">
+              <span class="e-name">DOCTOR_DEPARTMENT</span>
+              <span class="e-badge">M:N BRIDGE</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Doctor_ID <span class="pk-tag">PK</span><span class="fk-tag">FK</span></th><th>Dept_ID <span class="pk-tag">PK</span><span class="fk-tag">FK</span></th><th>Joining_Date</th><th>Position</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell fk-cell">D-201</td><td class="pk-cell fk-cell">DP-10</td><td>2021-01-15</td><td>Sr. Consultant</td></tr>
+                <tr><td class="pk-cell fk-cell">D-201</td><td class="pk-cell fk-cell">DP-11</td><td>2023-05-10</td><td>Visiting Doc</td></tr>
+                <tr><td class="pk-cell fk-cell">D-202</td><td class="pk-cell fk-cell">DP-20</td><td>2019-08-01</td><td>Head of Dept</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>M:N Bridge Note:</strong> Dr. D-201 works in BOTH Cardiology (DP-10) and ICU (DP-11). The composite PK prevents duplicate assignments.
+            </div>
+          </div>
+        </div>
+
+        <!-- WARD TABLE -->
+        <div class="e-col-wrap">
+          <div class="e-card c3">
+            <div class="e-name-bar">
+              <span class="e-name">WARD</span>
+              <span class="e-badge">1:N CHILD</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Ward_ID <span class="pk-tag">PK</span></th><th>Hospital_ID <span class="fk-tag">FK</span></th><th>Ward_Name</th><th>Beds</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">W-501</td><td class="fk-cell">H-01</td><td>Cardiac Care Ward</td><td>20</td></tr>
+                <tr><td class="pk-cell">W-502</td><td class="fk-cell">H-01</td><td>General Male Ward</td><td>40</td></tr>
+                <tr><td class="pk-cell">W-601</td><td class="fk-cell">H-02</td><td>VIP Suite Ward</td><td>10</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Ward Facility:</strong> Tracks inpatient bed capacities per hospital for patient admission management.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 PATIENT SERVICES (TRANSACTIONS WITH SAMPLE DATA) -->
+  <div class="slide" id="s5">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">05</div>
+        <div class="banner-text">
+          <div class="banner-section">Patient Services // Operational Transactions</div>
+          <div class="banner-title">Appointments, Admissions &amp; Surgeries (1:N)</div>
+          <div class="banner-desc">Operational transaction tables linking patients to doctors and hospital facilities. Foreign Keys track the full patient care lifecycle from OPD visit to inpatient discharge.</div>
+        </div>
+      </div>
+      <div class="entity-cols">
+        <!-- APPOINTMENT -->
+        <div class="e-col-wrap">
+          <div class="e-card c1">
+            <div class="e-name-bar">
+              <span class="e-name">APPOINTMENT</span>
+              <span class="e-badge">TRANSACTION</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Appt_ID <span class="pk-tag">PK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Doctor <span class="fk-tag">FK</span></th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">APT-901</td><td class="fk-cell">P-1001</td><td class="fk-cell">D-201</td><td>Completed</td></tr>
+                <tr><td class="pk-cell">APT-902</td><td class="fk-cell">P-1002</td><td class="fk-cell">D-202</td><td>Scheduled</td></tr>
+                <tr><td class="pk-cell">APT-903</td><td class="fk-cell">P-1001</td><td class="fk-cell">D-203</td><td>Cancelled</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Foreign Key Flow:</strong> Patient <code>P-1001</code> holds multiple appointments over time with different specialist doctors.
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMISSION -->
+        <div class="e-col-wrap">
+          <div class="e-card c2">
+            <div class="e-name-bar">
+              <span class="e-name">ADMISSION</span>
+              <span class="e-badge">TRANSACTION</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Adm_ID <span class="pk-tag">PK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Ward <span class="fk-tag">FK</span></th><th>Admit_Date</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">ADM-301</td><td class="fk-cell">P-1001</td><td class="fk-cell">W-501</td><td>2026-02-10</td></tr>
+                <tr><td class="pk-cell">ADM-302</td><td class="fk-cell">P-1003</td><td class="fk-cell">W-502</td><td>2026-02-14</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Inpatient Admission:</strong> Assigns admitted patients to specific ward beds. Discharge date is updated upon checkout.
+            </div>
+          </div>
+        </div>
+
+        <!-- SURGERY -->
+        <div class="e-col-wrap">
+          <div class="e-card c3">
+            <div class="e-name-bar">
+              <span class="e-name">SURGERY</span>
+              <span class="e-badge">TRANSACTION</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Surg_ID <span class="pk-tag">PK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Doctor <span class="fk-tag">FK</span></th><th>OT_Room</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">SRG-701</td><td class="fk-cell">P-1001</td><td class="fk-cell">D-201</td><td>OT-2 (Central)</td></tr>
+                <tr><td class="pk-cell">SRG-702</td><td class="fk-cell">P-1003</td><td class="fk-cell">D-202</td><td>OT-1 (Metro)</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Surgical Log:</strong> Connects surgical procedure type, patient key, lead surgeon, and assigned Operation Theatre room.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 ATTRIBUTE TYPES WITH INFORMATIVE EXPLANATIONS -->
+  <div class="slide" id="s6">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">06</div>
+        <div class="banner-text">
+          <div class="banner-section">Attribute Types // ER Theory &amp; Normalization</div>
+          <div class="banner-title">ER Attribute Taxonomy &amp; Relational Implementation</div>
+          <div class="banner-desc">Attributes are categorized by relational properties (Key, Composite, Multivalued, Derived) to satisfy First Normal Form (1NF) and ensure computational efficiency in database engines.</div>
+        </div>
+      </div>
+      <div class="attr-rows">
+        <!-- KEY ATTRIBUTE -->
+        <div class="attr-row">
+          <div class="attr-type-col">
+            <div class="attr-type-label">1. Key Attribute</div>
+            <div class="attr-field-name">Patient_ID</div>
+          </div>
+          <div class="attr-desc-col">
+            <strong>Uniquely identifies each patient tuple.</strong> Underlined in ER diagrams. Implemented via PostgreSQL B-Tree unique index with <code>NOT NULL</code> constraints.
+          </div>
+          <div class="attr-code-col">
+            <code>Patient_ID VARCHAR(20) PK UNIQUE NOT NULL</code>
+          </div>
+        </div>
+
+        <!-- COMPOSITE ATTRIBUTE -->
+        <div class="attr-row">
+          <div class="attr-type-col">
+            <div class="attr-type-label">2. Composite Attribute</div>
+            <div class="attr-field-name">Address</div>
+          </div>
+          <div class="attr-desc-col">
+            <strong>Divisible into independent sub-components.</strong> Decomposed into distinct scalar columns (<code>House_No, Street, City, Zip</code>) for precise indexing and spatial queries.
+          </div>
+          <div class="attr-code-col">
+            <code>Address → { House_No, Street, City, Zip_Code }</code>
+          </div>
+        </div>
+
+        <!-- MULTIVALUED ATTRIBUTE -->
+        <div class="attr-row">
+          <div class="attr-type-col">
+            <div class="attr-type-label">3. Multivalued Attribute</div>
+            <div class="attr-field-name">Phone_Number</div>
+          </div>
+          <div class="attr-desc-col">
+            <strong>A patient can hold multiple phone numbers.</strong> Storing multiple values in a single cell violates 1st Normal Form (1NF). Extracted into a dedicated child table.
+          </div>
+          <div class="attr-code-col">
+            <code>Patient_Phone (Patient_ID FK PK, Phone PK)</code>
+          </div>
+        </div>
+
+        <!-- DERIVED ATTRIBUTE -->
+        <div class="attr-row">
+          <div class="attr-type-col">
+            <div class="attr-type-label">4. Derived Attribute</div>
+            <div class="attr-field-name">Age</div>
+          </div>
+          <div class="attr-desc-col">
+            <strong>Dynamically calculated from Date_of_Birth.</strong> Not physically stored as a static column to prevent stale data over time. Computed during SQL queries.
+          </div>
+          <div class="attr-code-col">
+            <code>Age ← FLOOR(DATEDIFF(NOW(), Date_of_Birth)/365)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 PRESCRIPTIONS & MEDICATION (M:N DATA TABLES) -->
+  <div class="slide" id="s7">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">07</div>
+        <div class="banner-text">
+          <div class="banner-section">Medical Services // Pharmacy Integration</div>
+          <div class="banner-title">Prescriptions &amp; Medication Junction (M:N)</div>
+          <div class="banner-desc">One prescription contains multiple medications, and one drug item appears across thousands of prescriptions. <code>PRESCRIPTION_MEDICINE</code> stores specific dosage and frequency line items.</div>
+        </div>
+      </div>
+      <div class="entity-cols">
+        <!-- PRESCRIPTION -->
+        <div class="e-col-wrap">
+          <div class="e-card c1">
+            <div class="e-name-bar">
+              <span class="e-name">PRESCRIPTION</span>
+              <span class="e-badge">MASTER</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Rx_ID <span class="pk-tag">PK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Doctor <span class="fk-tag">FK</span></th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">RX-801</td><td class="fk-cell">P-1001</td><td class="fk-cell">D-201</td><td>2026-02-12</td></tr>
+                <tr><td class="pk-cell">RX-802</td><td class="fk-cell">P-1002</td><td class="fk-cell">D-203</td><td>2026-02-15</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Prescription Master:</strong> Header record created by attending doctor during consultation.
+            </div>
+          </div>
+        </div>
+
+        <!-- JUNCTION: PRESCRIPTION_MEDICINE -->
+        <div class="e-col-wrap">
+          <div class="e-card assoc c2">
+            <div class="e-name-bar">
+              <span class="e-name">PRESCRIPTION_MEDICINE</span>
+              <span class="e-badge">M:N LINE ITEM</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Rx_ID <span class="pk-tag">PK</span><span class="fk-tag">FK</span></th><th>Med_ID <span class="pk-tag">PK</span><span class="fk-tag">FK</span></th><th>Dosage</th><th>Frequency</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell fk-cell">RX-801</td><td class="pk-cell fk-cell">MED-10</td><td>500mg</td><td>1-0-1 (7 Days)</td></tr>
+                <tr><td class="pk-cell fk-cell">RX-801</td><td class="pk-cell fk-cell">MED-25</td><td>10mg</td><td>0-0-1 (Night)</td></tr>
+                <tr><td class="pk-cell fk-cell">RX-802</td><td class="pk-cell fk-cell">MED-10</td><td>250mg</td><td>1-1-1 (5 Days)</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Line Item Junction:</strong> Prescription <code>RX-801</code> contains TWO drugs (Amoxicillin &amp; Atorvastatin) with custom dosages.
+            </div>
+          </div>
+        </div>
+
+        <!-- MEDICATIONS -->
+        <div class="e-col-wrap">
+          <div class="e-card c3">
+            <div class="e-name-bar">
+              <span class="e-name">MEDICATION</span>
+              <span class="e-badge">CATALOG</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Med_ID <span class="pk-tag">PK</span></th><th>Medicine_Name</th><th>Type</th><th>Manufacturer</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">MED-10</td><td>Amoxicillin</td><td>Capsule</td><td>Square Pharma</td></tr>
+                <tr><td class="pk-cell">MED-25</td><td>Atorvastatin</td><td>Tablet</td><td>Beximco</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Medication Catalog:</strong> Master pharmacy drug inventory available across network dispensaries.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 INSURANCE, AMBULANCE & BLOOD DONATION (EXTENDED TO MEET PDF SCHEMAS) -->
+  <div class="slide" id="s8">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">08</div>
+        <div class="banner-text">
+          <div class="banner-section">Financial &amp; Support // Auxiliary Services</div>
+          <div class="banner-title">Insurance Policy Claims &amp; Ambulance Dispatch</div>
+          <div class="banner-desc">Auxiliary services integrated into the relational core. Patients link to third-party insurance policies, and hospitals coordinate real-time emergency fleet dispatch logs.</div>
+        </div>
+      </div>
+      <div class="entity-cols">
+        <!-- INSURANCE -->
+        <div class="e-col-wrap">
+          <div class="e-card c1">
+            <div class="e-name-bar">
+              <span class="e-name">INSURANCE_POLICY</span>
+              <span class="e-badge">FINANCIAL</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Policy_ID <span class="pk-tag">PK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Provider</th><th>Coverage Limit</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">POL-9901</td><td class="fk-cell">P-1001</td><td>Green Delta</td><td>$50,000.00</td></tr>
+                <tr><td class="pk-cell">POL-9902</td><td class="fk-cell">P-1003</td><td>Pragati Life</td><td>$25,000.00</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Insurance Linkage:</strong> Connects patients to third-party policies for automatic billing claims at checkout.
+            </div>
+          </div>
+        </div>
+
+        <!-- AMBULANCE -->
+        <div class="e-col-wrap">
+          <div class="e-card c2">
+            <div class="e-name-bar">
+              <span class="e-name">AMBULANCE</span>
+              <span class="e-badge">FLEET</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Amb_ID <span class="pk-tag">PK</span></th><th>Hospital <span class="fk-tag">FK</span></th><th>Vehicle_Reg</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">AMB-01</td><td class="fk-cell">H-01</td><td>DHAKA-E-11</td><td>Available</td></tr>
+                <tr><td class="pk-cell">AMB-02</td><td class="fk-cell">H-01</td><td>DHAKA-E-12</td><td>Dispatched</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Fleet Inventory:</strong> Ambulance vehicles assigned to specific hospital stations.
+            </div>
+          </div>
+        </div>
+
+        <!-- AMBULANCE DISPATCH -->
+        <div class="e-col-wrap">
+          <div class="e-card c3">
+            <div class="e-name-bar">
+              <span class="e-name">AMBULANCE_DISPATCH</span>
+              <span class="e-badge">LOG</span>
+            </div>
+            <table class="data-grid">
+              <thead>
+                <tr><th>Dispatch_ID <span class="pk-tag">PK</span></th><th>Amb <span class="fk-tag">FK</span></th><th>Patient <span class="fk-tag">FK</span></th><th>Timestamp</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk-cell">DSP-401</td><td class="fk-cell">AMB-02</td><td class="fk-cell">P-1002</td><td>2026-02-17 08:30</td></tr>
+              </tbody>
+            </table>
+            <div class="e-explain">
+              <strong>Dispatch Log:</strong> Real-time deployment tracking linking patient emergency calls to vehicles.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 09 ER DIAGRAM -->
+  <div class="slide" id="s9">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">09</div>
+        <div class="banner-text">
+          <div class="banner-section">Conceptual Model // Visual Schema</div>
+          <div class="banner-title">Complete Entity-Relationship (ER) Model Diagram</div>
+          <div class="banner-desc">Comprehensive visual diagram representing all 11 entities, relationships, cardinalities (1:1, 1:N, M:N), primary keys, and specialized attributes.</div>
+        </div>
+      </div>
+      <div class="er-viewer-container" id="erViewer">
+        <div class="er-zoom-badge">🔍 Hover to Zoom &amp; Inspect Details</div>
+        <img id="erImg" src="/design-previews/er-diagram.svg" alt="Complete Relational ER Diagram" onerror="this.src='/design-previews/er-diagram.png'" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 RELATIONAL SCHEMA (ELABORATED TO MEET ALL REQUIREMENTS FROM PDF & CHATGPT) -->
+  <div class="slide" id="s10">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">10</div>
+        <div class="banner-text">
+          <div class="banner-section">Relational Schema // DDL Mapping</div>
+          <div class="banner-title">ER Entities to Relational SQL Table Schemas</div>
+          <div class="banner-desc">Translating conceptual ER entities into normalized database table schemas annotated with SQL data types, Primary Keys (PK), and Foreign Keys (FK).</div>
+        </div>
+      </div>
+      <div class="schema-cols">
+        <div class="schema-col-wrap">
+          <div class="schema-card sc1">
+            <div class="schema-col-head">PATIENT</div>
+            <div class="schema-body">
+              <div class="schema-field"><span class="sf-name">Patient_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK UNIQUE</span></div>
+              <div class="schema-field"><span class="sf-name">Name</span><span class="sf-meta">VARCHAR(100) &bull; NOT NULL</span></div>
+              <div class="schema-field"><span class="sf-name">Date_of_Birth</span><span class="sf-meta">DATE &bull; NOT NULL</span></div>
+              <div class="schema-field"><span class="sf-name">Blood_Group</span><span class="sf-meta">VARCHAR(5)</span></div>
+              <div class="schema-field"><span class="sf-name">Gender</span><span class="sf-meta">CHAR(1) &bull; CHECK (M/F/O)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="schema-col-wrap">
+          <div class="schema-card sc2">
+            <div class="schema-col-head">APPOINTMENT</div>
+            <div class="schema-body">
+              <div class="schema-field"><span class="sf-name">Appointment_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK</span></div>
+              <div class="schema-field"><span class="sf-name">Patient_ID</span><span class="sf-meta">VARCHAR(20) &bull; FK</span></div>
+              <div class="schema-field"><span class="sf-name">Doctor_ID</span><span class="sf-meta">VARCHAR(20) &bull; FK</span></div>
+              <div class="schema-field"><span class="sf-name">Hospital_ID</span><span class="sf-meta">VARCHAR(20) &bull; FK</span></div>
+              <div class="schema-field"><span class="sf-name">Status</span><span class="sf-meta">ENUM (Scheduled/Completed)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="schema-col-wrap">
+          <div class="schema-card sc3">
+            <div class="schema-col-head">DOCTOR_DEPT</div>
+            <div class="schema-body">
+              <div class="schema-field"><span class="sf-name">Doctor_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK, FK</span></div>
+              <div class="schema-field"><span class="sf-name">Department_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK, FK</span></div>
+              <div class="schema-field"><span class="sf-name">Joining_Date</span><span class="sf-meta">DATE &bull; DEFAULT CURRENT</span></div>
+              <div class="schema-field"><span class="sf-name">Position</span><span class="sf-meta">VARCHAR(60)</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="schema-col-wrap">
+          <div class="schema-card sc4">
+            <div class="schema-col-head">PRESC_MEDICINE</div>
+            <div class="schema-body">
+              <div class="schema-field"><span class="sf-name">Prescription_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK, FK</span></div>
+              <div class="schema-field"><span class="sf-name">Medication_ID</span><span class="sf-meta">VARCHAR(20) &bull; PK, FK</span></div>
+              <div class="schema-field"><span class="sf-name">Dosage</span><span class="sf-meta">VARCHAR(40) &bull; NOT NULL</span></div>
+              <div class="schema-field"><span class="sf-name">Frequency</span><span class="sf-meta">VARCHAR(40) &bull; NOT NULL</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 BUSINESS RULES & CONSTRAINTS -->
+  <div class="slide" id="s11">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">11</div>
+        <div class="banner-text">
+          <div class="banner-section">Business Rules // Database Constraints &amp; Conclusion</div>
+          <div class="banner-title">Enterprise Business Rules &amp; Relational Constraints</div>
+          <div class="banner-desc">Core operational constraints governing the healthcare database. Enforced directly at the engine level via Primary Keys, Foreign Keys, Unique Indexes, and NOT NULL checks.</div>
+        </div>
+      </div>
+      <div class="rules-block" id="rulesList">
+        <div class="rule-stripe">
+          <div class="rule-n-cell">01</div>
+          <div class="rule-text-cell">One hospital can have many departments. Each department belongs to exactly one hospital.</div>
+          <div class="rule-enforce-cell">FOREIGN KEY (Hospital_ID)</div>
+          <div class="rule-card-cell"><span class="rule-badge">1 : N</span></div>
+        </div>
+        <div class="rule-stripe">
+          <div class="rule-n-cell">02</div>
+          <div class="rule-text-cell">A doctor can practice in multiple departments; a department employs multiple doctors.</div>
+          <div class="rule-enforce-cell">DOCTOR_DEPARTMENT Bridge</div>
+          <div class="rule-card-cell"><span class="rule-badge">M : N</span></div>
+        </div>
+        <div class="rule-stripe">
+          <div class="rule-n-cell">03</div>
+          <div class="rule-text-cell">A patient can make multiple appointments, each linked to one doctor and one hospital.</div>
+          <div class="rule-enforce-cell">FOREIGN KEY (Patient, Doctor)</div>
+          <div class="rule-card-cell"><span class="rule-badge">1 : N</span></div>
+        </div>
+        <div class="rule-stripe">
+          <div class="rule-n-cell">04</div>
+          <div class="rule-text-cell">A patient can be admitted multiple times; each admission is assigned to one specific ward bed.</div>
+          <div class="rule-enforce-cell">FOREIGN KEY (Ward_ID)</div>
+          <div class="rule-card-cell"><span class="rule-badge">1 : N</span></div>
+        </div>
+        <div class="rule-stripe">
+          <div class="rule-n-cell">05</div>
+          <div class="rule-text-cell">One prescription can contain multiple medications (resolved via Prescription_Medicine).</div>
+          <div class="rule-enforce-cell">PRESC_MEDICINE Bridge</div>
+          <div class="rule-card-cell"><span class="rule-badge">M : N</span></div>
+        </div>
+        <div class="rule-stripe">
+          <div class="rule-n-cell">06</div>
+          <div class="rule-text-cell">A hospital manages multiple ambulances; each ambulance records multiple dispatches over time.</div>
+          <div class="rule-enforce-cell">FOREIGN KEY (Ambulance_ID)</div>
+          <div class="rule-card-cell"><span class="rule-badge">1 : N</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12 THANK YOU SLIDE -->
+  <div class="slide" id="s12">
+    <div class="layout-title" style="flex:1;">
+      <div class="title-l" style="background: var(--slate); justify-content: center; align-items: flex-start; gap: 2rem;">
+        <div class="title-l-label">SE 223 · Database Design Project</div>
+        <div class="title-l-h" style="font-size: clamp(3.5rem, 7vw, 6.2rem);">Thank You!</div>
+        <div class="title-l-meta" style="font-size: 0.9rem; opacity: 0.85;">
+          Questions &amp; Discussion<br/>
+          Integrated Healthcare &amp; Hospital Network Database
+        </div>
+      </div>
+      <div class="title-r" style="justify-content: center; gap: 2.5rem;">
+        <div>
+          <div class="title-r-label">Project Team — Group 2</div>
+          <div class="member-list">
+            <div class="m-item">Md. Sourav Rana <span class="m-id">ID: 252-35-602</span></div>
+            <div class="m-item">Mahtabul Al Nahian <span class="m-id">ID: 252-35-408</span></div>
+            <div class="m-item">Mst. Afia Tasnim Esha <span class="m-id">ID: 252-35-583</span></div>
+            <div class="m-item">Meherin Ritu <span class="m-id">ID: 252-35-578</span></div>
+            <div class="m-item">Zubayer Watsit Zoha <span class="m-id">ID: 252-35-353</span></div>
+          </div>
+          
+          <div class="faculty-box">
+            <div class="faculty-title">Presented To (Faculty)</div>
+            <div class="faculty-name" style="font-size: 1.15rem;">Nusrat Jahan Tazin</div>
+            <div class="faculty-desc">
+              Lecturer, Department of Software Engineering<br/>
+              Daffodil International University<br/>
+              Email: nusrattazin.swe@diu.edu.bd
+            </div>
+          </div>
+        </div>
+        <div class="date-stamp" style="font-size: 0.82rem; color: var(--slate); font-weight: 600;">
+          SE 223 Database Design &bull; Presentation Complete
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIXED BOTTOM BAR (BLENDS SEAMLESSLY WITHOUT HARSH BORDER) -->
+  <div class="bbar">
+    <div class="bbar-navs">
+      <button class="bbar-btn" onclick="navigate(-1)" title="Previous Slide">&#8592;</button>
+      <button class="bbar-btn" onclick="navigate(1)" title="Next Slide">&#8594;</button>
+    </div>
+    <div class="progress-track"><div class="progress-f" id="pFill"></div></div>
+    <div class="bbar-counter" id="counter">01 / 12</div>
+    <div class="bbar-key">&uarr;&darr; or &larr;&rarr; arrow keys to navigate</div>
+  </div>
+
+</div>
+
+<script>
+  const total = 12;
+  let cur = 1;
+  let activeCardIdx = -1;
+
+  function updateKeyboardHover(wrappers) {
+    // Remove hover states from all elements
+    document.querySelectorAll('.e-col-wrap, .schema-col-wrap').forEach(w => {
+      w.classList.remove('keyboard-hover');
+    });
+    document.querySelectorAll('.entity-cols, .schema-cols').forEach(c => {
+      c.classList.remove('has-keyboard-hover');
+    });
+
+    // Apply only to the currently active keyboard indexed wrapper
+    if (activeCardIdx >= 0 && activeCardIdx < wrappers.length) {
+      const activeWrapper = wrappers[activeCardIdx];
+      activeWrapper.classList.add('keyboard-hover');
+      
+      const container = activeWrapper.closest('.entity-cols, .schema-cols');
+      if (container) {
+        container.classList.add('has-keyboard-hover');
+      }
+    }
+  }
+
+  function goTo(n) {
+    document.getElementById('s' + cur)?.classList.remove('active');
+    cur = Math.max(1, Math.min(total, n));
+    document.getElementById('s' + cur)?.classList.add('active');
+    document.getElementById('pFill').style.width = (cur / total * 100) + '%';
+    document.getElementById('counter').textContent = String(cur).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+
+    // Reset card hover state on slide change
+    activeCardIdx = -1;
+    updateKeyboardHover([]);
+
+    if (cur === 11) {
+      const rules = document.querySelectorAll('.rule-stripe');
+      rules.forEach((r, i) => setTimeout(() => r.classList.add('visible'), i * 100));
+    }
+  }
+
+  function navigate(dir) { goTo(cur + dir); }
+
+  // Clear keyboard highlights when moving mouse to avoid interaction conflicts
+  document.addEventListener('mousemove', () => {
+    if (activeCardIdx !== -1) {
+      activeCardIdx = -1;
+      updateKeyboardHover([]);
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    const activeSlide = document.getElementById('s' + cur);
+    const wrappers = activeSlide ? activeSlide.querySelectorAll('.e-col-wrap, .schema-col-wrap') : [];
+
+    if (wrappers.length > 0) {
+      // Current slide has card objects
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault(); // Prevent page/container scroll
+        if (activeCardIdx < wrappers.length - 1) {
+          activeCardIdx++;
+          updateKeyboardHover(wrappers);
+        } else {
+          activeCardIdx = -1;
+          updateKeyboardHover([]);
+          goTo(cur + 1);
+        }
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault(); // Prevent page/container scroll
+        if (activeCardIdx > 0) {
+          activeCardIdx--;
+          updateKeyboardHover(wrappers);
+        } else if (activeCardIdx === 0) {
+          activeCardIdx = -1;
+          updateKeyboardHover([]);
+        } else {
+          goTo(cur - 1);
+        }
+      }
+    } else {
+      // Normal slide change behavior
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        goTo(cur + 1);
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        goTo(cur - 1);
+      }
+    }
+  });
+
+  goTo(1);
+
+  // ER Diagram Zoom-on-Hover
+  const erViewer = document.getElementById('erViewer');
+  const erImg = document.getElementById('erImg');
+  if (erViewer && erImg) {
+    erViewer.addEventListener('mouseenter', () => {
+      erImg.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform-origin 0.05s linear';
+      erImg.style.transform = 'scale(2.6)';
+    });
+
+    erViewer.addEventListener('mousemove', e => {
+      const rect = erViewer.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      erImg.style.transformOrigin = `${x}% ${y}%`;
+    });
+
+    erViewer.addEventListener('mouseleave', () => {
+      erImg.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform-origin 0.4s ease';
+      erImg.style.transform = 'scale(1)';
+      erImg.style.transformOrigin = 'center center';
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,1440 @@
+Yes. Since you’re doing Topic 2: Integrated Healthcare and Hospital Network, your task is essentially to take the scenario and turn it into a complete database design.
+
+The instructions require you to identify entities, attributes, relationships, business rules, then create an ER diagram and convert it into a relational schema with PKs, FKs, and constraints.
+
+1. First understand what your system contains
+
+Your scenario describes a healthcare organisation with:
+
+Multiple hospitals
+Diagnostic centres
+Pharmacies
+Blood banks
+Ambulance services
+Patients
+Doctors
+Nurses
+Technicians
+Departments
+Wards
+Operation theatres
+Laboratories
+Insurance providers
+Medical equipment
+Consultations
+Diagnostics
+Surgeries
+Admissions
+Prescriptions
+Diagnoses
+Billing
+Vaccination programmes
+Research studies
+
+The scenario specifically says that patients can receive consultations, diagnostics, surgeries, emergency treatment, admissions and follow-up care, while doctors can work in multiple departments, perform surgeries, prescribe medication and oversee treatment plans.
+
+2. Identify the entities
+
+An entity is basically a major object/person/thing that needs its own data in the database.
+
+For your system, I'd divide them into these groups.
+
+People
+Patient
+Doctor
+Nurse
+Technician
+Employee
+Healthcare facilities
+Hospital
+Diagnostic Centre
+Pharmacy
+Blood Bank
+Laboratory
+Ward
+Operation Theatre
+Department
+Medical records
+Appointment
+Diagnosis
+Treatment Plan
+Prescription
+Medication
+Surgery
+Admission
+Discharge
+Financial/insurance
+Insurance Provider
+Insurance Claim
+Bill
+Payment
+Other services
+Ambulance
+Ambulance Dispatch
+Medical Equipment
+Vaccination Program
+Vaccination
+Research Study
+Donor
+
+You don't necessarily have to use every single one. The goal is to create a realistic and manageable database rather than making an unnecessarily gigantic ER diagram.
+
+3. Give every entity attributes
+
+For example:
+
+Patient
+Patient
+---------
+Patient_ID (PK)
+Name
+Date_of_Birth
+Gender
+Phone
+Email
+Address
+Blood_Group
+Emergency_Contact
+Doctor
+Doctor
+---------
+Doctor_ID (PK)
+Name
+Specialization
+Phone
+Email
+License_No
+Hospital
+Hospital
+---------
+Hospital_ID (PK)
+Hospital_Name
+Location
+Phone
+Email
+Department
+Department
+---------
+Department_ID (PK)
+Department_Name
+Location
+Hospital_ID (FK)
+
+Notice something important:
+
+Hospital_ID (FK) connects the Department to a Hospital.
+
+4. Look for relationships
+
+This is probably the most important part of your ER diagram.
+
+Ask:
+
+"How are these entities connected?"
+
+For example:
+
+Hospital → Department
+
+One hospital can have many departments.
+
+Hospital 1 ─────────── N Department
+
+So:
+
+Hospital HAS Departments
+
+Department → Doctor
+
+A doctor may work in multiple departments, and a department can have multiple doctors.
+
+Therefore:
+
+Doctor M ─────────── N Department
+
+That's a many-to-many relationship.
+
+You cannot directly implement this easily in a relational database, so you create an associative entity:
+
+Doctor_Department
+------------------
+Doctor_ID (PK, FK)
+Department_ID (PK, FK)
+Joining_Date
+Position
+
+Now:
+
+Doctor 1 ─── N Doctor_Department N ─── 1 Department
+5. Patient and Doctor
+
+A patient can visit multiple doctors.
+
+A doctor can treat many patients.
+
+Therefore:
+
+Patient M ─────────── N Doctor
+
+But you shouldn't directly connect them.
+
+Instead, create something like:
+
+Appointment
+Appointment
+------------
+Appointment_ID (PK)
+Patient_ID (FK)
+Doctor_ID (FK)
+Hospital_ID (FK)
+Appointment_Date
+Appointment_Time
+Status
+Reason
+
+Now:
+
+Patient 1 ─── N Appointment N ─── 1 Doctor
+
+This is much better because an appointment itself has information.
+
+6. Patient and Diagnosis
+
+A patient can have multiple diagnoses, and a particular diagnosis can occur for many patients.
+
+So:
+
+Patient M ─────────── N Diagnosis
+
+Create:
+
+Patient_Diagnosis
+Patient_Diagnosis
+------------------
+Patient_ID (PK, FK)
+Diagnosis_ID (PK, FK)
+Doctor_ID (FK)
+Diagnosis_Date
+Notes
+7. Patient and Prescription
+
+A patient can receive many prescriptions.
+
+A doctor can issue many prescriptions.
+
+So:
+
+Patient 1 ─── N Prescription
+Doctor  1 ─── N Prescription
+
+For example:
+
+Prescription
+-------------
+Prescription_ID (PK)
+Patient_ID (FK)
+Doctor_ID (FK)
+Prescription_Date
+Instructions
+
+But there is another problem.
+
+One prescription can contain multiple medications.
+
+For example:
+
+Prescription #1001
+
+Paracetamol
+Amoxicillin
+Omeprazole
+
+Therefore, you need:
+
+Prescription
+Prescription_Medicine
+Medication
+Medication
+Medication
+-----------
+Medication_ID (PK)
+Medicine_Name
+Type
+Manufacturer
+Prescription_Medicine
+Prescription_Medicine
+---------------------
+Prescription_ID (PK, FK)
+Medication_ID (PK, FK)
+Dosage
+Frequency
+Duration
+
+This is another M:N relationship resolved using a bridge/associative entity.
+
+8. Patient and Admission
+
+A patient can be admitted multiple times.
+
+So:
+
+Patient 1 ─────────── N Admission
+Admission
+Admission
+---------
+Admission_ID (PK)
+Patient_ID (FK)
+Hospital_ID (FK)
+Ward_ID (FK)
+Admission_Date
+Discharge_Date
+Reason
+Status
+
+And:
+
+Hospital 1 ─── N Admission
+Ward     1 ─── N Admission
+Patient  1 ─── N Admission
+9. Ward belongs to Hospital
+Hospital 1 ─────────── N Ward
+Ward
+Ward
+----
+Ward_ID (PK)
+Hospital_ID (FK)
+Ward_Name
+Ward_Type
+Capacity
+10. Surgery
+
+A patient can undergo multiple surgeries.
+
+A doctor can perform multiple surgeries.
+
+So:
+
+Patient 1 ─── N Surgery
+Doctor  1 ─── N Surgery
+Surgery
+Surgery
+-------
+Surgery_ID (PK)
+Patient_ID (FK)
+Doctor_ID (FK)
+Hospital_ID (FK)
+Operation_Theatre_ID (FK)
+Surgery_Type
+Surgery_Date
+Status
+
+And:
+
+Hospital 1 ─── N Operation_Theatre
+11. Insurance
+
+A patient may have insurance.
+
+An insurance provider can cover many patients.
+
+Depending on your assumptions:
+
+Insurance_Provider 1 ─── N Insurance_Policy
+Patient             1 ─── N Insurance_Policy
+
+You can create:
+
+Insurance Provider
+Insurance_Provider
+------------------
+Provider_ID (PK)
+Provider_Name
+Phone
+Address
+Insurance Policy
+Insurance_Policy
+----------------
+Policy_ID (PK)
+Patient_ID (FK)
+Provider_ID (FK)
+Policy_Number
+Start_Date
+End_Date
+Coverage_Amount
+Status
+
+Then claims can reference the policy.
+
+12. Ambulance
+
+Your scenario specifically mentions ambulance services.
+
+You could model:
+
+Ambulance
+---------
+Ambulance_ID (PK)
+Hospital_ID (FK)
+Vehicle_Number
+Type
+Status
+
+And:
+
+Ambulance_Dispatch
+------------------
+Dispatch_ID (PK)
+Ambulance_ID (FK)
+Patient_ID (FK)
+Pickup_Location
+Destination
+Dispatch_Time
+Arrival_Time
+Status
+
+This gives you another useful relationship:
+
+Ambulance 1 ─── N Ambulance_Dispatch
+Patient   1 ─── N Ambulance_Dispatch
+13. Medical equipment
+
+A hospital can have many pieces of equipment.
+
+Hospital 1 ─────────── N Medical_Equipment
+Medical Equipment
+Medical_Equipment
+-----------------
+Equipment_ID (PK)
+Hospital_ID (FK)
+Equipment_Name
+Equipment_Type
+Purchase_Date
+Status
+
+You could also associate equipment with departments.
+
+14. Special requirements from the assignment
+
+Your teacher specifically wants different types of attributes in the ER diagram.
+
+So don't make every attribute just a simple oval.
+
+You should demonstrate these.
+
+Key attribute
+
+For Patient:
+
+Patient_ID
+
+Underline it in the ER diagram.
+
+Simple attribute
+Gender
+Blood_Group
+Composite attribute
+
+Instead of:
+
+Address
+
+you can model:
+
+Address
+ ├── House_No
+ ├── Street
+ ├── City
+ └── Postal_Code
+Multivalued attribute
+
+A patient may have multiple phone numbers.
+
+Patient
+   |
+   └── Phone_Number {multivalued}
+
+However, when converting to a relational schema, you'd normally create:
+
+Patient_Phone
+------------
+Patient_ID (PK, FK)
+Phone_Number (PK)
+Derived attribute
+
+For example:
+
+Age
+
+can be derived from:
+
+Date_of_Birth
+
+So:
+
+Date_of_Birth → Age
+
+In the ER diagram, Age can be shown as a derived attribute.
+
+15. Weak entity
+
+Your instructions specifically say:
+
+"Identify weak entities if they exist in the system and model them correctly."
+
+A good candidate could be Prescription_Medicine or another dependent entity, depending on how you model it.
+
+For example:
+
+Prescription
+     |
+     | contains
+     |
+Prescription_Medicine
+
+Prescription_Medicine cannot meaningfully exist without a Prescription and a Medication.
+
+You can discuss this in your presentation as a dependent/associative entity.
+
+16. Business rules
+
+This is another thing you need to explicitly write down.
+
+Business rules are basically statements describing how your system works.
+
+For your project, you could have:
+
+One hospital can contain many departments.
+Each department belongs to one hospital.
+A doctor can work in multiple departments.
+A department can have multiple doctors.
+A patient can make multiple appointments.
+Each appointment is associated with one patient and one doctor.
+A patient can have multiple diagnoses.
+A doctor can issue multiple prescriptions.
+A prescription can contain multiple medications.
+A patient can be admitted multiple times.
+Each admission is associated with one hospital and one ward.
+A hospital can have multiple wards.
+A patient can undergo multiple surgeries.
+A surgery is performed by a doctor and takes place in an operation theatre.
+An insurance provider can provide policies for multiple patients.
+A patient can submit multiple insurance claims.
+A hospital can own/manage multiple ambulances.
+An ambulance can handle multiple dispatches over time.
+
+These rules directly help you determine the cardinalities in your ER diagram.
+
+17. Then create the ER diagram
+
+Your final ER diagram will roughly have this structure:
+
+                         ┌─────────────┐
+                         │   HOSPITAL  │
+                         └──────┬──────┘
+                                │ 1
+                 ┌──────────────┼───────────────┐
+                 │ N            │ N             │ N
+          ┌──────▼─────┐ ┌──────▼──────┐ ┌──────▼─────────┐
+          │ DEPARTMENT │ │    WARD     │ │    AMBULANCE   │
+          └──────┬─────┘ └──────┬──────┘ └──────┬─────────┘
+                 │              │               │
+                 │              │               │
+              M:N              1:N             1:N
+                 │              │               │
+        ┌────────▼──────┐ ┌─────▼──────┐ ┌──────▼─────────┐
+        │    DOCTOR     │ │ ADMISSION  │ │    DISPATCH    │
+        └──────┬────────┘ └─────┬──────┘ └────────────────┘
+               │                │
+               │                │
+               │             N  │
+               │                │
+               │           ┌────▼─────┐
+               │           │  PATIENT │
+               │           └────┬─────┘
+               │                │
+          ┌────┼────────┬───────┼────────┬───────────┐
+          │    │        │       │        │           │
+          ▼    ▼        ▼       ▼        ▼           ▼
+      APPOINTMENT   DIAGNOSIS  SURGERY  PRESCRIPTION  INSURANCE
+
+Don't use this exact layout as your final diagram. This is just to show you how to think about connecting everything.
+
+For the actual ER diagram, use proper ER notation in something like draw.io, Lucidchart, or Microsoft Visio.
+
+18. Finally convert ER → Relational Schema
+
+This is the second major deliverable.
+
+For example, your ER model:
+
+Hospital 1 ─── N Department
+
+becomes:
+
+HOSPITAL(
+    Hospital_ID PK,
+    Hospital_Name,
+    Location,
+    Phone,
+    Email
+)
+
+
+DEPARTMENT(
+    Department_ID PK,
+    Department_Name,
+    Location,
+    Hospital_ID FK
+)
+
+And:
+
+Doctor M ─── N Department
+
+becomes:
+
+DOCTOR(
+    Doctor_ID PK,
+    Name,
+    Specialization,
+    Phone,
+    Email,
+    License_No
+)
+
+
+DEPARTMENT(
+    Department_ID PK,
+    Department_Name,
+    Location,
+    Hospital_ID FK
+)
+
+
+DOCTOR_DEPARTMENT(
+    Doctor_ID PK, FK,
+    Department_ID PK, FK,
+    Joining_Date,
+    Position
+)
+
+That's the basic process:
+
+Scenario → Entities → Attributes → Relationships → Cardinality → ER Diagram → Relational Schema
+
+What I recommend you do for the presentation
+
+Don't try to put the entire healthcare system into one impossible-to-read diagram.
+
+Divide your work into 3 parts:
+
+Part 1 — ER Model
+
+Show around 15–20 important entities and their relationships.
+
+Part 2 — Explain the important relationships
+
+Especially:
+
+Hospital → Department
+Doctor ↔ Department
+Patient → Appointment
+Patient → Admission
+Patient → Surgery
+Doctor → Prescription
+Prescription ↔ Medication
+Patient → Insurance Policy
+Hospital → Ambulance
+Part 3 — Relational Schema
+
+Show the tables with:
+
+PK
+FK
+Important constraints
+Associative tables for M:N relationships
+
+And at the beginning of your presentation file, remember to include all group members' names and IDs, group name, and the scenario, because those are explicitly required.
+
+If you want, I can next 
+build the complete Topic 2 database for you — all entities + attributes + PK/FK + cardinalities + business rules + a clean ER-diagram structure, so you can directly recreate it in draw.io.
+
+we have to present it somehow, what will be the best approach?
+
+Yes. For this assignment, I wouldn't present it as "here are 20 entities and their attributes." That will become boring and confusing very quickly.
+
+The best approach is to present it as a real hospital database being designed step-by-step.
+
+Your assigned scenario is an integrated healthcare network with hospitals, patients, doctors, departments, diagnostics, surgeries, prescriptions, insurance, ambulances, etc.
+
+Best presentation structure
+
+I would structure the presentation like this:
+
+Slide 1 — Title
+
+Integrated Healthcare and Hospital Network
+
+Then:
+
+Group name
+Group members + IDs
+Course: SE 223
+Scenario: Group 2
+
+The assignment explicitly requires the group members, IDs, group name, and scenario in the presentation.
+
+Slide 2 — Understanding the Scenario
+
+Don't immediately jump into the ER diagram.
+
+Explain what the system is supposed to manage.
+
+For example:
+
+"Our system is designed for a healthcare organisation that operates multiple hospitals, diagnostic centres, pharmacies, blood banks and ambulance services. It manages patients, doctors, nurses, technicians, medical records, surgeries, prescriptions, admissions, insurance and other healthcare operations."
+
+Then show a simple visual overview:
+
+             INTEGRATED HEALTHCARE SYSTEM
+                         │
+       ┌─────────────────┼─────────────────┐
+       │                 │                 │
+   Patients          Hospitals         Medical Staff
+       │                 │                 │
+       ├── Appointments  ├── Departments   ├── Doctors
+       ├── Diagnoses     ├── Wards         ├── Nurses
+       ├── Surgeries     ├── Laboratories  └── Technicians
+       ├── Prescriptions └── OT
+       └── Admissions
+
+This gives the audience context before you hit them with database terminology.
+
+Slide 3 — Main Entities
+
+Now introduce your entities.
+
+But group them logically, rather than showing one giant list.
+
+People
+Patient
+Doctor
+Nurse
+Technician
+Facilities
+Hospital
+Department
+Ward
+Laboratory
+Operation Theatre
+Diagnostic Centre
+Medical Services
+Appointment
+Diagnosis
+Surgery
+Prescription
+Medication
+Admission
+Financial & Support
+Insurance Provider
+Insurance Policy
+Insurance Claim
+Ambulance
+Ambulance Dispatch
+
+This makes the design look much more intentional.
+
+Slide 4 — Important Relationships
+
+This is where your presentation starts becoming interesting.
+
+Don't explain every relationship.
+
+Pick 5–7 important ones.
+
+For example:
+
+Hospital ───────< Department
+
+
+Doctor >───────< Department
+
+
+Patient ───────< Appointment >─────── Doctor
+
+
+Patient ───────< Admission >─────── Ward
+
+
+Patient ───────< Surgery >──────── Doctor
+
+
+Prescription >──────< Medication
+
+Then explain why each relationship exists.
+
+For example:
+
+"A doctor can work in multiple departments, and a department can have multiple doctors. Therefore, this is a many-to-many relationship, which we resolve using a Doctor_Department associative entity."
+
+That demonstrates that you understand database modelling, instead of simply drawing boxes.
+
+Slide 5 — Attribute Types
+
+This slide is important because the instructions specifically require different attribute types.
+
+Show a small example rather than trying to demonstrate everything at once.
+
+Patient
+Patient_ID       → Key attribute
+Name             → Simple attribute
+Address          → Composite attribute
+Phone_Number     → Multivalued attribute
+Date_of_Birth    → Simple attribute
+Age              → Derived attribute
+
+Then briefly explain:
+
+"Patient_ID uniquely identifies each patient, Address can be divided into smaller components, a patient may have multiple phone numbers, and Age can be derived from Date_of_Birth."
+
+That's enough.
+
+Slide 6 — The ER Diagram
+
+This should probably be your biggest/most important slide.
+
+Put the complete ER diagram here.
+
+But don't try to explain every box.
+
+Instead, divide the explanation among group members.
+
+For example:
+
+Member 1
+
+Hospital + Department + Staff
+
+Member 2
+
+Patient + Appointment + Diagnosis
+
+Member 3
+
+Admission + Ward + Surgery
+
+Member 4
+
+Prescription + Medication
+
+Member 5
+
+Insurance + Billing
+
+Member 6
+
+Ambulance + Diagnostic/Research/Vaccination
+
+That way, each person owns a section of the diagram.
+
+Slide 7 — Zoomed-in ER sections
+
+This is something I'd strongly recommend.
+
+A complete ER diagram with 20 entities will be difficult to read on a projector.
+
+So after showing the complete diagram, create 2–4 zoomed-in slides.
+
+For example:
+
+Slide 7 — Patient Management
+Patient
+   │
+   ├──── Appointment ──── Doctor
+   │
+   ├──── Diagnosis
+   │
+   ├──── Admission ────── Ward
+   │
+   └──── Surgery ──────── Doctor
+Slide 8 — Medication Management
+Doctor
+   │
+   ▼
+Prescription
+   │
+   ▼
+Prescription_Medicine
+   │
+   ▼
+Medication
+Slide 9 — Hospital Operations
+Hospital
+ ├── Department
+ ├── Ward
+ ├── Laboratory
+ ├── Operation Theatre
+ ├── Ambulance
+ └── Medical Equipment
+
+This makes the actual database design much easier for your audience to understand.
+
+Slide 10 — Relational Schema
+
+Now show how the ER diagram becomes actual database tables.
+
+For example:
+
+PATIENT
+---------
+Patient_ID PK
+Name
+Date_of_Birth
+Gender
+Phone
+Address
+Blood_Group
+
+
+
+
+APPOINTMENT
+-----------
+Appointment_ID PK
+Patient_ID FK
+Doctor_ID FK
+Hospital_ID FK
+Appointment_Date
+Status
+
+
+
+
+DOCTOR
+------
+Doctor_ID PK
+Name
+Specialization
+Phone
+License_No
+
+Don't put every table on one slide if it becomes tiny.
+
+Use 2 slides if necessary.
+
+Slide 11 — M:N Relationships
+
+This deserves its own slide because it's one of the things that demonstrates actual database knowledge.
+
+For example:
+
+Doctor ↔ Department
+
+Initially:
+
+Doctor M ───────── N Department
+
+We resolve it using:
+
+Doctor
+   │
+   │ 1:N
+   ▼
+Doctor_Department
+   ▲
+   │ N:1
+   │
+Department
+
+Then show:
+
+DOCTOR_DEPARTMENT
+-----------------
+Doctor_ID PK, FK
+Department_ID PK, FK
+Joining_Date
+Position
+
+Do the same for:
+
+Prescription ↔ Medication
+
+This is a very good opportunity to explain why associative tables are necessary.
+
+Slide 12 — Business Rules
+
+Keep this simple.
+
+Something like:
+
+One hospital can have many departments.
+A doctor can work in multiple departments.
+A patient can have multiple appointments.
+Each appointment is associated with one doctor and one patient.
+A patient can have multiple admissions.
+A prescription can contain multiple medications.
+A hospital can manage multiple ambulances.
+
+The instructions specifically ask you to identify business rules, so make them visible rather than only implying them through the diagram.
+
+Slide 13 — Constraints
+
+Briefly explain:
+
+Primary Key
+
+Uniquely identifies a record.
+
+Example:
+
+Patient_ID
+Foreign Key
+
+Connects two tables.
+
+Example:
+
+Patient_ID in Appointment
+Composite Primary Key
+
+Useful for associative entities.
+
+Example:
+
+Doctor_Department
+
+
+PK = (Doctor_ID, Department_ID)
+
+You can also mention:
+
+NOT NULL
+UNIQUE
+CHECK
+Referential integrity
+
+Don't spend too long here.
+
+Slide 14 — Final System Overview
+
+Finish by showing the entire design again.
+
+Something like:
+
+             INTEGRATED HEALTHCARE
+                     │
+       ┌─────────────┼─────────────┐
+       │             │             │
+     PEOPLE       SERVICES     FACILITIES
+       │             │             │
+    Patients      Surgery       Hospitals
+    Doctors       Diagnosis     Departments
+    Nurses        Admission     Wards
+    Technicians   Prescription  Laboratories
+                  Insurance     Operation Theatres
+                  Ambulance
+
+Then conclude:
+
+"Our database integrates patient care, hospital operations, medical services, insurance and support services into a single relational system. The ER model captures the relationships between these components, while the relational schema converts them into implementable database tables."
+
+How I'd divide it among 6 people
+
+If you have 6 members, I'd do this:
+
+Member	Section
+1	Introduction + scenario + main entities
+2	Hospital, departments and medical staff
+3	Patients, appointments and diagnoses
+4	Admissions, wards and surgeries
+5	Prescriptions, medications and insurance
+6	Relational schema + constraints + conclusion
+
+This is better than having everyone randomly explain parts of the ER diagram.
+
+Each person should have a clear story:
+
+"These are the entities → this is how they relate → this is how we represent that relationship in the database."
+
+The most important thing
+
+Don't make the presentation about the scenario. Make it about your design decisions.
+
+Your teacher already knows the scenario.
+
+What they want to see is whether your group can take:
+
+Real-world healthcare problem
+
+↓
+
+Entities
+
+↓
+
+Attributes
+
+↓
+
+Relationships + Cardinalities
+
+↓
+
+ER Diagram
+
+↓
+
+Relational Schema
+
+↓
+
+PK/FK + Constraints
+
+The assignment specifically asks you to analyse the scenario, extend it with realistic assumptions, identify entities/attributes/relationships/business rules, and convert the result into a relational schema.
+
+So if you present the reasoning behind your database design, rather than just reading the diagram, it'll be much stronger.
+
+If you tell me how many members are in your group and how long the total presentation is, I can map out the exact slides + who says what + what should be on each slide.
+
+there are 5 members. and the presentation will be 10 minutes long
+
+With 5 members and only 10 minutes, I'd keep it to 10–12 slides and give each person roughly 2 minutes. Don't try to explain every entity; focus on the database design decisions.
+
+The assignment asks you to identify entities, attributes, relationships, business rules, create an ER diagram, and convert it into a relational schema with PKs/FKs and constraints.
+
+Recommended 10-minute structure
+Time	Member	Section	Slides
+0:00–2:00	Member 1	Introduction + scenario + entities	1–2
+2:00–4:00	Member 2	Hospital + staff + departments	3–4
+4:00–6:00	Member 3	Patient management	5–6
+6:00–8:00	Member 4	Medical services + insurance	7–8
+8:00–10:00	Member 5	ER → relational schema + conclusion	9–11
+
+That gives everyone about 2 minutes, which is much more realistic than trying to cram the whole database into a few slides.
+
+Slide-by-slide plan
+Slide 1 — Title
+
+~20 seconds
+
+Integrated Healthcare and Hospital Network
+SE 223
+Group Name
+Member names + IDs
+
+The assignment explicitly requires the group information and scenario in the presentation.
+
+Slide 2 — Scenario & System Scope
+
+~1 minute 40 seconds — Member 1
+
+Explain what the system manages:
+
+Healthcare Network
+│
+├── Hospitals
+├── Diagnostic Centres
+├── Pharmacies
+├── Blood Banks
+├── Ambulance Services
+├── Patients
+├── Medical Staff
+└── Medical/Financial Records
+
+Then say something like:
+
+"Our scenario describes a healthcare organisation operating multiple hospitals and related healthcare facilities. The database needs to manage patients, doctors, nurses, technicians, departments, wards, surgeries, prescriptions, insurance, ambulance services and research activities."
+
+The source scenario specifically identifies these areas.
+
+Don't start listing attributes yet.
+
+Member 2 — Hospital Infrastructure
+Slide 3 — Main Hospital Entities
+
+~1 minute
+
+Show:
+
+Hospital
+   │
+   ├── Department
+   ├── Ward
+   ├── Laboratory
+   ├── Operation Theatre
+   └── Medical Equipment
+
+Explain the basic relationship:
+
+"A hospital can contain multiple departments, wards, laboratories and operation theatres. Each of these belongs to a particular hospital."
+
+Then introduce the staff.
+
+Slide 4 — Doctors & Departments
+
+~1 minute
+
+This is a good place to demonstrate an M:N relationship.
+
+Doctor M ───────── N Department
+
+Then:
+
+Doctor
+   │
+   ▼
+Doctor_Department
+   ▲
+   │
+Department
+
+Explain:
+
+"A doctor can work in multiple departments, while a department can have multiple doctors. Therefore, this is a many-to-many relationship. We resolve it using the Doctor_Department associative entity."
+
+This directly comes from the scenario's statement that doctors may work in multiple departments.
+
+That's a good database-design explanation, rather than just reading boxes.
+
+Member 3 — Patient Management
+Slide 5 — Patient & Healthcare Records
+
+~1 minute
+
+Show:
+
+Patient
+ │
+ ├── Appointment
+ ├── Diagnosis
+ ├── Admission
+ ├── Surgery
+ └── Prescription
+
+Explain the cardinalities:
+
+Patient 1 ─── N Appointment
+Patient 1 ─── N Diagnosis
+Patient 1 ─── N Admission
+Patient 1 ─── N Surgery
+Patient 1 ─── N Prescription
+
+The scenario explicitly says patients can have consultations, diagnostics, surgeries, emergency treatments, admissions and follow-up care.
+
+Slide 6 — Attributes
+
+~1 minute
+
+This is where you satisfy the requirement for different attribute types.
+
+Use one entity, Patient, as your example:
+
+PATIENT
+
+
+Patient_ID       → Key
+Name             → Simple
+Address          → Composite
+Phone_Number     → Multivalued
+Date_of_Birth    → Simple
+Age              → Derived
+
+Explain only briefly:
+
+Patient_ID uniquely identifies a patient.
+Address can contain smaller components.
+A patient can have multiple phone numbers.
+Age can be derived from date of birth.
+
+The assignment specifically requires key, simple, composite, multivalued and derived attributes where applicable.
+
+This slide is important because it's directly checking one of the assignment requirements.
+
+Member 4 — Medical & Financial Services
+Slide 7 — Prescription & Medication
+
+~1 minute
+
+This is another excellent M:N example.
+
+Prescription M ───── N Medication
+
+Resolve it:
+
+Prescription
+     │
+     │ 1:N
+     ▼
+Prescription_Medicine
+     ▲
+     │ N:1
+     │
+Medication
+
+Example:
+
+PRESCRIPTION_MEDICINE
+---------------------
+Prescription_ID PK, FK
+Medication_ID   PK, FK
+Dosage
+Frequency
+Duration
+
+Explain:
+
+"One prescription can contain several medications, and the same medication can appear in many prescriptions. Therefore, we create Prescription_Medicine as an associative entity."
+
+Slide 8 — Insurance & Ambulance
+
+~1 minute
+
+Don't go too deep here.
+
+Show:
+
+Patient ─── Insurance Policy ─── Insurance Provider
+
+
+Patient ─── Ambulance Dispatch ─── Ambulance
+
+Briefly explain what these entities are used for.
+
+The source scenario specifically mentions insurance claim processing and ambulance services.
+
+Member 5 — The Actual Database
+Slide 9 — Complete ER Diagram
+
+~1 minute
+
+This should be the main visual of your entire presentation.
+
+Put the complete ER diagram here.
+
+But don't try to explain every single entity.
+
+Say:
+
+"This is our complete ER model. We have grouped the system into hospital infrastructure, healthcare personnel, patient services and financial/support services. The relationships and cardinalities shown here represent the business rules we identified from the scenario."
+
+Then point out 2–3 important relationships.
+
+Slide 10 — Relational Schema
+
+~45 seconds
+
+Show selected tables:
+
+PATIENT
+---------
+Patient_ID PK
+Name
+Date_of_Birth
+Gender
+Blood_Group
+
+
+
+
+DOCTOR
+--------
+Doctor_ID PK
+Name
+Specialization
+
+
+
+
+APPOINTMENT
+-----------
+Appointment_ID PK
+Patient_ID FK
+Doctor_ID FK
+Hospital_ID FK
+Appointment_Date
+Status
+
+
+
+
+DOCTOR_DEPARTMENT
+-----------------
+Doctor_ID PK, FK
+Department_ID PK, FK
+Joining_Date
+
+You don't need to show every attribute of every table.
+
+The audience needs to understand:
+
+ER relationship → relational tables → PK/FK.
+
+Slide 11 — Business Rules + Conclusion
+
+~15–30 seconds
+
+Put 5–6 key rules:
+
+One hospital has many departments.
+A doctor may work in multiple departments.
+A patient can have multiple appointments.
+A patient can have multiple admissions.
+A prescription can contain multiple medications.
+Each associative entity resolves an M:N relationship.
+
+Then finish:
+
+"Therefore, our proposed database provides an integrated structure for managing patients, healthcare professionals, hospital facilities, medical services and supporting financial operations."
+
+One important change I'd make
+
+Don't make 11 slides full of text.
+
+Your presentation should be approximately:
+
+30% text + 70% diagrams/visuals.
+
+Especially for:
+
+Slide 3 → relationship diagram
+Slide 4 → M:N relationship
+Slide 5 → patient relationship map
+Slide 7 → prescription/medication relationship
+Slide 9 → complete ER diagram
+Slide 10 → relational schema
+
+Your ER diagram should be the centrepiece, because that's ultimately what you're being asked to design.
+
+What each member should actually be responsible for
+
+I'd give everyone a specific section of the database, not just a random set of slides:
+
+Member 1 — System Analyst
+
+"What does the healthcare system need to manage?"
+
+Member 2 — Hospital & Staff
+
+"How are hospitals, departments and doctors connected?"
+
+Member 3 — Patient Management
+
+"How do patients interact with doctors and healthcare services?"
+
+Member 4 — Services & Support
+
+"How are prescriptions, medication, insurance and ambulance services modelled?"
+
+Member 5 — Database Designer
+
+"How do all these relationships become an ER diagram and relational schema?"
+
+That creates a natural flow:
+
+Problem → Entities → Relationships → Services → Database
+
+rather than five people giving disconnected speeches.
+
+And for 10 minutes, I'd aim for ~9:30, not exactly 10:00.
+
+You need a little buffer for changing speakers, clicking slides, and the inevitable "umm..." moments. 😄
