@@ -1,9 +1,9 @@
-# SE 223 — Database Design Project Presentation
+# SE 223 — Database System Project Presentation
 ## Topic 2: Integrated Healthcare and Hospital Network
 ### Complete 5-Person Speaker Script & Presentation Notes (MySQL / MariaDB & phpMyAdmin Edition)
 
 > **Total Duration:** ~12–14 Minutes (~2.5 Minutes per Speaker)  
-> **Course:** SE 223 — Database Design  
+> **Course:** SE 223 — Database System  
 > **Institution:** Department of Software Engineering, Daffodil International University  
 > **DBMS Target:** MySQL / MariaDB (XAMPP phpMyAdmin, InnoDB Engine)  
 > **Interactive Slide File:** `index.html` (14 Slides Total)
@@ -34,7 +34,7 @@
 #### 📌 Slide 01: Title & Presentation Intro
 * **Visual on Screen:** Split slate-blue title panel, course meta, team roster, and faculty details.
 * **Spoken Script:**
-  > *"Good morning / afternoon, honorable faculty member Ms. Nusrat Jahan Tazin and dear classmates. We are Group 2, and today we are presenting our Database Design project for SE 223 on Topic 2: **Integrated Healthcare and Hospital Network**.*
+  > *"Good morning / afternoon, honorable faculty member Ms. Nusrat Jahan Tazin and dear classmates. We are Group 2, and today we are presenting our Database System project for SE 223 on Topic 2: **Integrated Healthcare and Hospital Network**.*
   >
   > *In modern healthcare systems, patient medical histories, clinical records, and facility logistics are frequently siloed across independent hospitals, diagnostic labs, and pharmacies. Our objective in this project is to architect a robust, centralized relational database in MySQL and MariaDB — managed via XAMPP's phpMyAdmin — that eliminates record fragmentation while enforcing strict relational integrity using the InnoDB storage engine."*
 
@@ -268,7 +268,7 @@
 #### 📌 Slide 14: Thank You & Q&A Handoff
 * **Visual on Screen:** Thank You panel with design summary stats ( 13 Entities · 3 Weak/Assoc. · 10+ Relationships · 3NF ), full team roster, and faculty contact card.
 * **Spoken Script:**
-  > *"In conclusion, our relational database design delivers a scalable, fully normalized, and centralized foundation for an integrated healthcare network in MySQL and MariaDB.*
+  > *"In conclusion, our relational Database System delivers a scalable, fully normalized, and centralized foundation for an integrated healthcare network in MySQL and MariaDB.*
   >
   > *The design covers 13 entities — including 3 weak or associative entities — connected through more than 10 formally defined relationships, all normalized to Third Normal Form. Every relationship has a precisely chosen enforcement mechanism in phpMyAdmin, from simple Foreign Keys to composite junction tables with cascading delete rules.*
   >

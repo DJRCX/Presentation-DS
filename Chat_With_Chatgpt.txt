@@ -1,4 +1,4 @@
-Yes. Since you’re doing Topic 2: Integrated Healthcare and Hospital Network, your task is essentially to take the scenario and turn it into a complete database design.
+Yes. Since you’re doing Topic 2: Integrated Healthcare and Hospital Network, your task is essentially to take the scenario and turn it into a complete Database System.
 
 The instructions require you to identify entities, attributes, relationships, business rules, then create an ER diagram and convert it into a relational schema with PKs, FKs, and constraints.
 
@@ -877,7 +877,7 @@ Hospital
  ├── Ambulance
  └── Medical Equipment
 
-This makes the actual database design much easier for your audience to understand.
+This makes the actual Database System much easier for your audience to understand.
 
 Slide 10 — Relational Schema
 
@@ -1092,13 +1092,13 @@ PK/FK + Constraints
 
 The assignment specifically asks you to analyse the scenario, extend it with realistic assumptions, identify entities/attributes/relationships/business rules, and convert the result into a relational schema.
 
-So if you present the reasoning behind your database design, rather than just reading the diagram, it'll be much stronger.
+So if you present the reasoning behind your Database System, rather than just reading the diagram, it'll be much stronger.
 
 If you tell me how many members are in your group and how long the total presentation is, I can map out the exact slides + who says what + what should be on each slide.
 
 there are 5 members. and the presentation will be 10 minutes long
 
-With 5 members and only 10 minutes, I'd keep it to 10–12 slides and give each person roughly 2 minutes. Don't try to explain every entity; focus on the database design decisions.
+With 5 members and only 10 minutes, I'd keep it to 10–12 slides and give each person roughly 2 minutes. Don't try to explain every entity; focus on the Database System decisions.
 
 The assignment asks you to identify entities, attributes, relationships, business rules, create an ER diagram, and convert it into a relational schema with PKs/FKs and constraints.
 
@@ -1425,7 +1425,7 @@ Member 4 — Services & Support
 
 "How are prescriptions, medication, insurance and ambulance services modelled?"
 
-Member 5 — Database Designer
+Member 5 — Database Systemer
 
 "How do all these relationships become an ER diagram and relational schema?"
 
