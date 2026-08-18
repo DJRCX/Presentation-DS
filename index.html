@@ -959,7 +959,7 @@
             <div class="attr-field-name">Patient_ID</div>
           </div>
           <div class="attr-desc-col">
-            <strong>Uniquely identifies each patient tuple.</strong> Underlined in ER diagrams. Implemented via PostgreSQL B-Tree unique index with <code>NOT NULL</code> constraints.
+            <strong>Uniquely identifies each patient tuple.</strong> Underlined in ER diagrams. Implemented in MySQL / MariaDB via <code>PRIMARY KEY</code> with <code>NOT NULL</code> &amp; B-Tree index.
           </div>
           <div class="attr-code-col">
             <code>Patient_ID VARCHAR(20) PK UNIQUE NOT NULL</code>
@@ -1004,7 +1004,7 @@
             <strong>Dynamically calculated from Date_of_Birth.</strong> Not physically stored as a static column to prevent stale data over time. Computed during SQL queries.
           </div>
           <div class="attr-code-col">
-            <code>Age ← FLOOR(DATEDIFF(NOW(), Date_of_Birth)/365)</code>
+            <code>Age ← TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE())</code>
           </div>
         </div>
       </div>

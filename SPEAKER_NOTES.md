@@ -1,10 +1,11 @@
 # SE 223 — Database Design Project Presentation
 ## Topic 2: Integrated Healthcare and Hospital Network
-### Complete 5-Person Speaker Script & Presentation Notes
+### Complete 5-Person Speaker Script & Presentation Notes (MySQL / MariaDB & phpMyAdmin Edition)
 
 > **Total Duration:** ~12–14 Minutes (~2.5 Minutes per Speaker)  
 > **Course:** SE 223 — Database Design  
 > **Institution:** Department of Software Engineering, Daffodil International University  
+> **DBMS Target:** MySQL / MariaDB (XAMPP phpMyAdmin, InnoDB Engine)  
 > **Interactive Slide File:** `index.html` (14 Slides Total)
 
 ---
@@ -35,7 +36,7 @@
 * **Spoken Script:**
   > *"Good morning / afternoon, honorable faculty member Ms. Nusrat Jahan Tazin and dear classmates. We are Group 2, and today we are presenting our Database Design project for SE 223 on Topic 2: **Integrated Healthcare and Hospital Network**.*
   >
-  > *In modern healthcare systems, patient medical histories, clinical records, and facility logistics are frequently siloed across independent hospitals, diagnostic labs, and pharmacies. Our objective in this project is to architect a robust, centralized relational database that eliminates record fragmentation while enforcing strict relational integrity across a multi-facility network."*
+  > *In modern healthcare systems, patient medical histories, clinical records, and facility logistics are frequently siloed across independent hospitals, diagnostic labs, and pharmacies. Our objective in this project is to architect a robust, centralized relational database in MySQL and MariaDB — managed via XAMPP's phpMyAdmin — that eliminates record fragmentation while enforcing strict relational integrity using the InnoDB storage engine."*
 
 ---
 
@@ -89,7 +90,7 @@
   >
   > *However, a significant relational challenge arises with doctors: a specialist physician may hold appointments in multiple departments across branches, and a department employs multiple doctors. This Many-to-Many relationship cannot be directly implemented with a single Foreign Key without introducing severe data redundancy.*
   >
-  > *To resolve this, we introduced the **`DOCTOR_DEPARTMENT`** associative entity with a Composite Primary Key combining `(Doctor_ID, Dept_ID)` — both acting as Foreign Keys simultaneously. This junction table also records relationship-specific attributes such as `Joining_Date` and doctor `Position`."*
+  > *To resolve this in MySQL, we introduced the **`DOCTOR_DEPARTMENT`** associative entity with a Composite Primary Key combining `(Doctor_ID, Dept_ID)` — both acting as Foreign Keys simultaneously. This junction table also records relationship-specific attributes such as `Joining_Date` and doctor `Position`."*
 
 ---
 
@@ -97,7 +98,7 @@
 * **Visual on Screen:** `APPOINTMENT`, `ADMISSION`, and `SURGERY` tables.
 * **Key Points to Emphasize:**
   * Transaction lifecycle: OPD Visit → Inpatient Admission → Operating Theatre.
-  * All three tables use Foreign Keys to maintain strict referential integrity.
+  * All three tables use InnoDB Foreign Keys to maintain strict referential integrity.
 * **Spoken Script:**
   > *"Slide 5 illustrates the primary clinical transactions that represent the patient care lifecycle.*
   >
@@ -105,22 +106,22 @@
   > * *When a patient requires hospitalization, an **`ADMISSION`** record is created, referencing the specific `Ward_ID` bed allocated and tracking both admission and discharge timestamps.*
   > * *If invasive care is required, the **`SURGERY`** table associates the patient with the lead surgeon and the assigned Operation Theatre room.*
   >
-  > *Each of these operational tables maintains strict referential integrity through Foreign Keys. No appointment, admission, or surgery can exist without a valid patient and doctor record."*
+  > *Each of these operational tables maintains strict referential integrity through MySQL foreign keys. No appointment, admission, or surgery can exist without a valid patient and doctor record."*
 
 ---
 
 #### 📌 Slide 06: ER Attribute Taxonomy & Relational Implementation
-* **Visual on Screen:** Key, Composite, Multivalued, and Derived attribute breakdowns with SQL code.
+* **Visual on Screen:** Key, Composite, Multivalued, and Derived attribute breakdowns with MySQL code.
 * **Key Points to Emphasize:**
-  * Why Multivalued attributes violate 1NF and how we resolve them.
-  * Derived attributes are never stored statically.
+  * Why Multivalued attributes violate 1NF and how we resolve them in phpMyAdmin.
+  * Derived attributes are computed using native MySQL date functions.
 * **Spoken Script:**
-  > *"Slide 6 demonstrates our comprehensive classification of ER attribute types and how each is translated into relational database structures.*
+  > *"Slide 6 demonstrates our comprehensive classification of ER attribute types and how each is translated into MySQL / MariaDB database structures.*
   >
-  > 1. ***Key Attribute ( `Patient_ID` ):*** *Uniquely identifies every tuple in the relation. Enforced in SQL via a B-Tree unique index and a `NOT NULL` constraint.*
-  > 2. ***Composite Attribute ( `Address` ):*** *A patient's address is composed of multiple distinct sub-components. Rather than storing an unformatted string, we decompose it into `House_No`, `Street`, `City`, and `Zip_Code` — enabling precise indexing and filtering.*
-  > 3. ***Multivalued Attribute ( `Phone_Number` ):*** *A patient can maintain multiple contact numbers. Storing comma-separated values in a single column violates First Normal Form. We resolve this by extracting phone numbers into a dedicated child table `Patient_Phone` where `(Patient_ID, Phone_Number)` forms a composite key.*
-  > 4. ***Derived Attribute ( `Age` ):*** *Age changes continuously. Storing it statically creates stale data. Instead, we store `Date_of_Birth` and compute `Age` dynamically during queries using `FLOOR( DATEDIFF(NOW(), Date_of_Birth) / 365 )`.*
+  > 1. ***Key Attribute ( `Patient_ID` ):*** *Uniquely identifies every tuple in the relation. Enforced in MySQL InnoDB via a `PRIMARY KEY` B-Tree index and a `NOT NULL` constraint.*
+  > 2. ***Composite Attribute ( `Address` ):*** *A patient's address is composed of multiple distinct sub-components. Rather than storing an unformatted string, we decompose it into `House_No`, `Street`, `City`, and `Zip_Code` — enabling precise indexing and spatial queries.*
+  > 3. ***Multivalued Attribute ( `Phone_Number` ):*** *A patient can maintain multiple contact numbers. Storing comma-separated values in a single cell violates First Normal Form. We resolve this by extracting phone numbers into a dedicated child table `Patient_Phone` where `(Patient_ID, Phone_Number)` forms a composite primary key.*
+  > 4. ***Derived Attribute ( `Age` ):*** *Age changes continuously. Storing it statically creates stale data. Instead, we store `Date_of_Birth` and compute `Age` dynamically during SQL queries using MySQL's native function: `TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE())`.*
   >
   > *I now pass the floor to Speaker 3."*
 
@@ -141,7 +142,7 @@
   >
   > *When a doctor conducts a consultation, they issue a prescription header. However, a single prescription can contain multiple medications — for example, an antibiotic along with a pain reliever — and the same medication appears across thousands of prescriptions.*
   >
-  > *We modeled this Many-to-Many relationship using the **`PRESCRIPTION_MEDICINE`** associative table. It links `Rx_ID` and `Med_ID` as a Composite Primary Key, while storing line-item parameters such as specific `Dosage` — for example, 500mg — and administration `Frequency` — for example, twice daily for 7 days.*
+  > *We modeled this Many-to-Many relationship using the **`PRESCRIPTION_MEDICINE`** associative table in MariaDB. It links `Rx_ID` and `Med_ID` as a Composite Primary Key, while storing line-item parameters such as specific `Dosage` — for example, 500mg — and administration `Frequency` — for example, twice daily for 7 days.*
   >
   > *This structure protects the master `MEDICATION` catalog inventory while maintaining a complete, patient-specific prescription history per visit."*
 
@@ -173,15 +174,15 @@
 * **Key Points to Emphasize:**
   * Definition of a weak entity and what a partial key means.
   * Three weak / associative entities: `AMBULANCE_DISPATCH`, `PATIENT_PHONE`, `PRESCRIPTION_MEDICINE`.
-  * ON DELETE CASCADE cascade rule.
+  * `ON DELETE CASCADE` rule configured in phpMyAdmin's Relation View.
 * **Spoken Script:**
   > *"Thank you, Speaker 3. Slide 9 addresses one of the more technically precise aspects of ER modeling — weak entities.*
   >
   > *A weak entity is one that cannot be uniquely identified by its own attributes alone. It is only meaningful in the context of its owner — or strong entity — and requires an identifying relationship combined with a partial key.*
   >
-  > *In our design, we have three such dependencies:*
+  > *In our MariaDB / MySQL design, we have three such dependencies configured with `ENGINE=InnoDB`:*
   >
-  > * *First, **`AMBULANCE_DISPATCH`** depends on **`AMBULANCE`**. A dispatch record cannot exist without a registered ambulance. The composite partial key is `(Amb_ID, Dispatch_ID)`. Deleting the ambulance record cascades and removes all its associated dispatch logs — enforced via `ON DELETE CASCADE`.*
+  > * *First, **`AMBULANCE_DISPATCH`** depends on **`AMBULANCE`**. A dispatch record cannot exist without a registered ambulance. The composite partial key is `(Amb_ID, Dispatch_ID)`. Deleting the ambulance record cascades and removes all its associated dispatch logs — enforced via `ON DELETE CASCADE` in phpMyAdmin.*
   > * *Second, **`PATIENT_PHONE`** depends on **`PATIENT`**. Since a patient can have multiple contact numbers — a multivalued attribute — we extract these into a child table with the partial key `(Patient_ID, Phone)`. This simultaneously satisfies First Normal Form.*
   > * *Third, **`PRESCRIPTION_MEDICINE`** is an associative entity jointly dependent on both `PRESCRIPTION` and `MEDICATION`. Its Composite Primary Key `(Rx_ID, Med_ID)` references both parent tables, and both Foreign Keys enforce `NOT NULL`."*
 
@@ -228,18 +229,18 @@
 ---
 
 #### 📌 Slide 12: ER Entities to Relational SQL Table Schemas
-* **Visual on Screen:** DDL column cards with SQL data types and constraints ( `VARCHAR`, `DATE`, `ENUM`, `CHECK` ). *(Tip: Press Arrow keys to expand each schema card.)*
+* **Visual on Screen:** DDL column cards with MySQL data types and constraints ( `VARCHAR`, `DATE`, `ENUM`, `CHECK` ). *(Tip: Press Arrow keys to expand each schema card.)*
 * **Key Points to Emphasize:**
-  * Direct translation from conceptual ER model to implementable SQL schema.
-  * Domain constraints enforced at the storage engine level, not in application code.
+  * Direct translation from conceptual ER model to implementable MySQL / MariaDB DDL script.
+  * Domain constraints enforced at the InnoDB storage engine level.
 * **Spoken Script:**
-  > *"Thank you, Speaker 4. Slide 12 details our DDL mapping — the translation from conceptual ER entities into concrete, implementable SQL table schemas.*
+  > *"Thank you, Speaker 4. Slide 12 details our DDL mapping — the translation from conceptual ER entities into concrete, implementable MySQL SQL table schemas.*
   >
-  > *We enforce data integrity at the storage engine level through several mechanisms:*
+  > *We enforce data integrity at the InnoDB storage engine level through several mechanisms:*
   > * *`VARCHAR` column widths are constrained to prevent memory bloating — for example, `Name VARCHAR(100)` rather than an unbounded text type.*
   > * *Critical fields like `Date_of_Birth` and `Name` carry `NOT NULL` constraints to guarantee record completeness.*
-  > * *Domain validation such as `CHECK (Gender IN ('M', 'F', 'O'))` ensures only valid enumerated values are accepted.*
-  > * *Foreign key constraints are configured with appropriate cascading rules to prevent orphaned child records.*
+  > * *Domain validation such as `CHECK (Gender IN ('M', 'F', 'O'))` ensures only valid enumerated values are accepted in MySQL 8.0+ / MariaDB 10.2+.*
+  > * *Foreign key constraints are configured with `ENGINE=InnoDB` and appropriate cascading rules to prevent orphaned child records.*
   >
   > *This schema is normalized to Third Normal Form — eliminating all transitive and partial dependencies while preserving full relational integrity."*
 
@@ -248,8 +249,8 @@
 #### 📌 Slide 13: Enterprise Business Rules & Relational Constraints
 * **Visual on Screen:** Numbered enterprise business rules with cardinality badges and engine enforcement annotations.
 * **Key Points to Emphasize:**
-  * Rules are enforced at the database engine level, not left to application logic.
-  * ACID compliance is guaranteed by the relational constraint system.
+  * Rules are enforced at the MySQL engine level via Foreign Keys, not left to application code.
+  * ACID compliance is guaranteed by InnoDB transactions in XAMPP / phpMyAdmin.
 * **Spoken Script:**
   > *"On Slide 13, we summarize the six cardinal enterprise business rules that govern the system:*
   >
@@ -267,9 +268,9 @@
 #### 📌 Slide 14: Thank You & Q&A Handoff
 * **Visual on Screen:** Thank You panel with design summary stats ( 13 Entities · 3 Weak/Assoc. · 10+ Relationships · 3NF ), full team roster, and faculty contact card.
 * **Spoken Script:**
-  > *"In conclusion, our relational database design delivers a scalable, fully normalized, and centralized foundation for an integrated healthcare network.*
+  > *"In conclusion, our relational database design delivers a scalable, fully normalized, and centralized foundation for an integrated healthcare network in MySQL and MariaDB.*
   >
-  > *The design covers 13 entities — including 3 weak or associative entities — connected through more than 10 formally defined relationships, all normalized to Third Normal Form. Every relationship has a precisely chosen enforcement mechanism, from simple Foreign Keys to composite junction tables with cascading delete rules.*
+  > *The design covers 13 entities — including 3 weak or associative entities — connected through more than 10 formally defined relationships, all normalized to Third Normal Form. Every relationship has a precisely chosen enforcement mechanism in phpMyAdmin, from simple Foreign Keys to composite junction tables with cascading delete rules.*
   >
   > *On behalf of Group 2 — Md. Sourav Rana, Mahtabul Al Nahian, Mst. Afia Tasnim Esha, Meherin Ritu, and Zubayer Watsit Zoha — we sincerely thank our honorable lecturer Ms. Nusrat Jahan Tazin and everyone present for your time and attention.*
   >
@@ -277,25 +278,25 @@
 
 ---
 
-## 🎯 Faculty Q&A Preparation Cheat Sheet
+## 🎯 Faculty Q&A Preparation Cheat Sheet (MySQL / MariaDB Focus)
 
-### Q1: Why did you use associative entities for `DOCTOR_DEPARTMENT` and `PRESCRIPTION_MEDICINE`?
+### Q1: Why is the `InnoDB` engine necessary for this project in XAMPP phpMyAdmin instead of `MyISAM`?
+* **Answer:** *"In MySQL and MariaDB, `MyISAM` does not support Foreign Key constraints or ACID transactions. Since our healthcare database relies heavily on referential integrity, Foreign Keys, and cascading deletes (`ON DELETE CASCADE`), we explicitly set `ENGINE=InnoDB` for all tables in phpMyAdmin."*
+
+### Q2: Why did you use associative entities for `DOCTOR_DEPARTMENT` and `PRESCRIPTION_MEDICINE`?
 * **Answer:** *"In relational databases, Many-to-Many relationships cannot be directly implemented with a single Foreign Key without introducing severe redundancy or multi-valued cells, which violates 1NF. An associative table resolves the M:N into two 1:N relationships and allows us to store relationship-specific attributes — such as doctor `Joining_Date` and medication `Dosage` — alongside the junction keys."*
 
-### Q2: How does your design ensure First Normal Form (1NF) for patient phone numbers?
+### Q3: How does your design ensure First Normal Form (1NF) for patient phone numbers?
 * **Answer:** *"1NF requires all attribute values to be atomic. Since a patient can have multiple phone numbers, storing them comma-separated in a single column violates 1NF. We extracted phone numbers into a separate child table `Patient_Phone` with composite primary key `(Patient_ID, Phone_Number)`, guaranteeing atomicity and enabling indexing on individual numbers."*
 
-### Q3: Why is Age not stored directly in the `PATIENT` table?
-* **Answer:** *"`Age` is a derived attribute. Storing it statically causes the value to become incorrect after every birthday, requiring costly periodic batch update jobs. Storing the immutable `Date_of_Birth` and deriving `Age` at query time via `FLOOR(DATEDIFF(NOW(), Date_of_Birth) / 365)` guarantees 100% accuracy with zero storage overhead."*
+### Q4: Why is Age not stored directly in the `PATIENT` table, and what MySQL function did you use?
+* **Answer:** *"`Age` is a derived attribute. Storing it statically causes the value to become incorrect after every birthday, requiring costly periodic batch update jobs. Storing the immutable `Date_of_Birth` and deriving `Age` at query time via MySQL's `TIMESTAMPDIFF(YEAR, Date_of_Birth, CURDATE())` guarantees 100% accuracy with zero storage overhead."*
 
-### Q4: What happens if a Hospital or Doctor record is deleted?
-* **Answer:** *"In production healthcare systems, critical master records are protected by `ON DELETE RESTRICT` or a soft-delete mechanism — a flag such as `is_active = FALSE` — to preserve historical audit trails covering prescriptions, surgeries, and billing records. Weak entities like `AMBULANCE_DISPATCH` and `PATIENT_PHONE` use `ON DELETE CASCADE` since their existence is fully dependent on their owner."*
-
-### Q5: What is the difference between a weak entity and an associative entity in your design?
-* **Answer:** *"A weak entity ( such as `AMBULANCE_DISPATCH` or `PATIENT_PHONE` ) has no meaningful existence without its one owner entity and relies on the owner's key as part of its own partial key. An associative entity ( such as `PRESCRIPTION_MEDICINE` or `DOCTOR_DEPARTMENT` ) resolves a Many-to-Many relationship between two strong entities and uses a composite key formed from both parents' Primary Keys."*
+### Q5: What happens if a Hospital or Doctor record is deleted in phpMyAdmin?
+* **Answer:** *"In production healthcare systems, critical master records are protected by `ON DELETE RESTRICT` or a soft-delete mechanism — a flag such as `is_active = FALSE` — to preserve historical audit trails covering prescriptions, surgeries, and billing records. Weak entities like `AMBULANCE_DISPATCH` and `PATIENT_PHONE` use `ON DELETE CASCADE` in phpMyAdmin's Relation View since their existence is fully dependent on their owner."*
 
 ### Q6: How is your schema normalized to 3NF?
 * **Answer:** *"Third Normal Form requires that every non-key attribute depends only on the Primary Key and nothing else. We achieved this by: (1) removing all multi-valued attributes like `Phone_Number` into child tables to satisfy 1NF; (2) ensuring all partial dependencies — attributes depending on part of a composite key — were eliminated for 2NF; and (3) removing transitive dependencies, where one non-key attribute determines another, for 3NF."*
 
 ---
-*End of Speaker Notes — SE 223 Presentation Group 2 · 14 Slides · Daffodil International University.*
+*End of Speaker Notes — SE 223 Presentation Group 2 · 14 Slides · Daffodil International University · MySQL / MariaDB (XAMPP).*
