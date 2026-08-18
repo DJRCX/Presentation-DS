@@ -1198,7 +1198,7 @@
           </div>
           <div class="weak-details-col">
             <div class="weak-details-label">Attributes &amp; Rule</div>
-            <div class="weak-details-text"><strong>Timestamp, Pickup_Location, Status.</strong> A dispatch record cannot exist without a registered ambulance. Deleting the ambulance cascades and removes all its dispatch logs (ON DELETE CASCADE).</div>
+            <div class="weak-details-text"><strong>Timestamp, Pickup_Location, Status.</strong>&nbsp;A dispatch record cannot exist without a registered ambulance. Deleting the ambulance cascades and removes all its dispatch logs (ON DELETE CASCADE).</div>
           </div>
         </div>
         <!-- PATIENT → PATIENT_PHONE -->
@@ -1214,7 +1214,7 @@
           </div>
           <div class="weak-details-col">
             <div class="weak-details-label">Attributes &amp; Rule</div>
-            <div class="weak-details-text"><strong>Phone (multivalued).</strong> A patient can hold multiple phone numbers. Extracted from PATIENT to satisfy 1NF. Cannot exist without a valid Patient_ID foreign key. (ON DELETE CASCADE).</div>
+            <div class="weak-details-text"><strong>Phone (multivalued).</strong>&nbsp;A patient can hold multiple phone numbers. Extracted from PATIENT to satisfy 1NF. Cannot exist without a valid Patient_ID foreign key. (ON DELETE CASCADE).</div>
           </div>
         </div>
         <!-- PRESCRIPTION_MEDICINE -->
@@ -1230,7 +1230,7 @@
           </div>
           <div class="weak-details-col">
             <div class="weak-details-label">Attributes &amp; Rule</div>
-            <div class="weak-details-text"><strong>Dosage, Frequency.</strong> Resolves M:N between prescriptions and medications. A line item cannot exist without both a valid prescription and a valid medication record. Both FKs are NOT NULL.</div>
+            <div class="weak-details-text"><strong>Dosage, Frequency.</strong>&nbsp;Resolves M:N between prescriptions and medications. A line item cannot exist without both a valid prescription and a valid medication record. Both FKs are NOT NULL.</div>
           </div>
         </div>
       </div>
@@ -1253,61 +1253,61 @@
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → DEPARTMENT</span></div>
           <div class="rel-verb-col">has</div>
-          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in DEPARTMENT. Each department belongs to exactly one hospital.</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID</strong>&nbsp;in DEPARTMENT. Each department belongs to exactly one hospital.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → WARD</span></div>
           <div class="rel-verb-col">contains</div>
-          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in WARD. A hospital manages many wards with distinct bed capacities.</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID</strong>&nbsp;in WARD. A hospital manages many wards with distinct bed capacities.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → AMBULANCE</span></div>
           <div class="rel-verb-col">owns</div>
-          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in AMBULANCE. Fleet registry scoped per hospital facility.</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID</strong>&nbsp;in AMBULANCE. Fleet registry scoped per hospital facility.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge m-n">M : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">DOCTOR ↔ DEPARTMENT</span></div>
           <div class="rel-verb-col">works in</div>
-          <div class="rel-note-col">Resolved via <strong>DOCTOR_DEPARTMENT </strong>bridge table (Doctor_ID, Dept_ID composite PK + FK).</div>
+          <div class="rel-note-col">Resolved via&nbsp;<strong>DOCTOR_DEPARTMENT</strong>&nbsp;bridge table (Doctor_ID, Dept_ID composite PK + FK).</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → APPOINTMENT</span></div>
           <div class="rel-verb-col">schedules</div>
-          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID </strong>in APPOINTMENT. Tracks multiple OPD visits per patient over time.</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID</strong>&nbsp;in APPOINTMENT. Tracks multiple OPD visits per patient over time.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → ADMISSION</span></div>
           <div class="rel-verb-col">admitted to</div>
-          <div class="rel-note-col"><strong>FK Patient_ID + Ward_ID.</strong> Tracks inpatient stays with admit and discharge dates.</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Ward_ID.</strong>&nbsp;Tracks inpatient stays with admit and discharge dates.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → SURGERY</span></div>
           <div class="rel-verb-col">undergoes</div>
-          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID.</strong> Multiple surgeries per patient logged with OT room assignment.</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID.</strong>&nbsp;Multiple surgeries per patient logged with OT room assignment.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge m-n">M : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">PRESCRIPTION ↔ MEDICATION</span></div>
           <div class="rel-verb-col">contains</div>
-          <div class="rel-note-col"><strong>PRESCRIPTION_MEDICINE </strong>junction (Rx_ID, Med_ID composite PK). Dosage &amp; frequency stored as line items.</div>
+          <div class="rel-note-col"><strong>PRESCRIPTION_MEDICINE</strong>&nbsp;junction (Rx_ID, Med_ID composite PK). Dosage &amp; frequency stored as line items.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → INSURANCE_POLICY</span></div>
           <div class="rel-verb-col">holds</div>
-          <div class="rel-note-col"><strong>FK Patient_ID </strong>in INSURANCE_POLICY. Supports multi-policy coverage per patient.</div>
+          <div class="rel-note-col"><strong>FK Patient_ID</strong>&nbsp;in INSURANCE_POLICY. Supports multi-policy coverage per patient.</div>
         </div>
         <div class="rel-stripe">
           <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
           <div class="rel-entities-col"><span class="rel-entity-pair">AMBULANCE → DISPATCH</span></div>
           <div class="rel-verb-col">deploys</div>
-          <div class="rel-note-col">Weak entity dependency. <strong>FK Amb_ID (ON DELETE CASCADE).</strong> Real-time emergency dispatch log.</div>
+          <div class="rel-note-col">Weak entity dependency.&nbsp;<strong>FK Amb_ID (ON DELETE CASCADE).</strong>&nbsp;Real-time emergency dispatch log.</div>
         </div>
       </div>
     </div>
