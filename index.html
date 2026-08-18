@@ -391,6 +391,103 @@
     .schema-col-wrap:hover .sf-meta,
     .schema-col-wrap.keyboard-hover .sf-meta { font-size: 0.78rem; }
 
+    /* ════════════════════════
+       WEAK ENTITY SLIDE (SLIDE 09)
+       ════════════════════════ */
+    .weak-grid {
+      flex: 1; display: flex; flex-direction: column; gap: 0.7rem;
+      padding: 0.9rem 3.5rem 1.5rem;
+    }
+    .weak-row {
+      flex: 1; border: 1.5px solid var(--line-hi); border-radius: 6px;
+      display: grid; grid-template-columns: 200px 1fr 1fr;
+      align-items: stretch; background: white;
+      transition: all 0.25s ease; overflow: hidden;
+    }
+    .weak-grid:hover .weak-row { opacity: 0.35; filter: brightness(0.78); }
+    .weak-grid .weak-row:hover {
+      opacity: 1 !important; filter: none !important;
+      transform: scale(1.015) translateY(-2px);
+      z-index: 20; border-color: var(--blue);
+      box-shadow: 0 14px 32px rgba(37,99,235,0.18);
+    }
+    .weak-owner-col {
+      background: var(--slate); color: white;
+      padding: 0.9rem 1.4rem; display: flex; flex-direction: column; justify-content: center;
+    }
+    .weak-owner-label { font-family: var(--mono); font-size: 0.63rem; opacity: 0.7; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .weak-owner-name { font-family: var(--display); font-size: 1.05rem; font-weight: 700; }
+    .weak-entity-col {
+      border-left: 1.5px solid var(--line); padding: 0.9rem 1.4rem;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .weak-entity-label { font-family: var(--mono); font-size: 0.63rem; color: var(--blue); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .weak-entity-name { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.35rem; }
+    .weak-partial-key { font-family: var(--mono); font-size: 0.75rem; color: var(--blue); background: var(--blue-lo); padding: 0.15rem 0.5rem; border-radius: 3px; display: inline-block; }
+    .weak-details-col {
+      border-left: 1.5px solid var(--line); padding: 0.9rem 1.4rem;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .weak-details-label { font-family: var(--mono); font-size: 0.63rem; color: var(--muted); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .weak-details-text { font-size: 0.88rem; color: var(--muted-hi); line-height: 1.5; }
+    .weak-details-text strong { color: var(--ink); font-weight: 600; }
+
+    /* ════════════════════════
+       RELATIONSHIPS TABLE SLIDE (SLIDE 10)
+       ════════════════════════ */
+    .rel-table-wrap {
+      flex: 1; padding: 0.8rem 3.5rem 1.5rem; overflow: auto;
+    }
+    .rel-table {
+      width: 100%; border-collapse: collapse;
+      font-family: var(--body); font-size: 0.9rem;
+    }
+    .rel-table thead tr {
+      background: var(--slate); color: white;
+    }
+    .rel-table thead th {
+      padding: 0.7rem 1.1rem; text-align: left;
+      font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .rel-table tbody tr {
+      border-bottom: 1px solid var(--line);
+      transition: background 0.15s ease;
+    }
+    .rel-table tbody tr:hover { background: var(--blue-lo); }
+    .rel-table tbody td {
+      padding: 0.6rem 1.1rem; vertical-align: middle;
+      color: var(--ink);
+    }
+    .rel-entity-pair { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--slate); }
+    .rel-verb { font-style: italic; color: var(--muted-hi); }
+    .rel-card-badge {
+      font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
+      padding: 0.2rem 0.6rem; border-radius: 3px; white-space: nowrap;
+    }
+    .rel-card-badge.one-n { background: var(--blue-lo); color: var(--blue); border: 1px solid #bfdbfe; }
+    .rel-card-badge.m-n { background: var(--amber-lo); color: var(--amber); border: 1px solid #fde68a; }
+    .rel-note-cell { font-size: 0.83rem; color: var(--muted-hi); line-height: 1.4; }
+
+    /* ════════════════════════
+       DESIGN SUMMARY STATS (CLOSING SLIDE)
+       ════════════════════════ */
+    .design-stats {
+      display: flex; gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .stat-box {
+      flex: 1; padding: 0.9rem 0.8rem; background: var(--slate);
+      border-radius: 6px; text-align: center;
+    }
+    .stat-num {
+      font-family: var(--display); font-size: 2.2rem; font-weight: 700;
+      color: white; line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono); font-size: 0.62rem; color: rgba(255,255,255,0.65);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.3rem;
+    }
+
     /* ER VIEWER WITH FULL SPACE & SMOOTH HOVER ZOOM */
     .er-viewer-container {
       flex: 1;
@@ -1056,11 +1153,163 @@
     </div>
   </div>
 
-  <!-- 09 ER DIAGRAM -->
+  <!-- 09 WEAK ENTITIES -->
   <div class="slide" id="s9">
     <div class="layout-std" style="flex:1;">
       <div class="slide-banner">
         <div class="banner-num">09</div>
+        <div class="banner-text">
+          <div class="banner-section">Conceptual Model // Weak Entity Theory</div>
+          <div class="banner-title">Weak Entities &amp; Identifying Relationships</div>
+          <div class="banner-desc">A weak entity has no key attribute strong enough to guarantee uniqueness on its own. It is uniquely identifiable only in the context of its owner (strong) entity via an identifying relationship and a partial key.</div>
+        </div>
+      </div>
+      <div class="weak-grid">
+        <!-- AMBULANCE_DISPATCH -->
+        <div class="weak-row">
+          <div class="weak-owner-col">
+            <div class="weak-owner-label">Owner Entity</div>
+            <div class="weak-owner-name">AMBULANCE</div>
+          </div>
+          <div class="weak-entity-col">
+            <div class="weak-entity-label">Weak Entity</div>
+            <div class="weak-entity-name">AMBULANCE_DISPATCH</div>
+            <span class="weak-partial-key">Partial Key: (Amb_ID, Dispatch_ID)</span>
+          </div>
+          <div class="weak-details-col">
+            <div class="weak-details-label">Attributes &amp; Rule</div>
+            <div class="weak-details-text"><strong>Timestamp, Pickup_Location, Status.</strong> A dispatch record cannot exist without a registered ambulance. Deleting the ambulance cascades and removes all its dispatch logs (ON DELETE CASCADE).</div>
+          </div>
+        </div>
+        <!-- PATIENT → PATIENT_PHONE -->
+        <div class="weak-row">
+          <div class="weak-owner-col">
+            <div class="weak-owner-label">Owner Entity</div>
+            <div class="weak-owner-name">PATIENT</div>
+          </div>
+          <div class="weak-entity-col">
+            <div class="weak-entity-label">Weak Entity</div>
+            <div class="weak-entity-name">PATIENT_PHONE</div>
+            <span class="weak-partial-key">Partial Key: (Patient_ID, Phone)</span>
+          </div>
+          <div class="weak-details-col">
+            <div class="weak-details-label">Attributes &amp; Rule</div>
+            <div class="weak-details-text"><strong>Phone (multivalued).</strong> A patient can hold multiple phone numbers. Extracted from PATIENT to satisfy 1NF. Cannot exist without a valid Patient_ID foreign key. (ON DELETE CASCADE).</div>
+          </div>
+        </div>
+        <!-- PRESCRIPTION_MEDICINE -->
+        <div class="weak-row">
+          <div class="weak-owner-col">
+            <div class="weak-owner-label">Owner Entities</div>
+            <div class="weak-owner-name">PRESCRIPTION + MEDICATION</div>
+          </div>
+          <div class="weak-entity-col">
+            <div class="weak-entity-label">Associative / Junction</div>
+            <div class="weak-entity-name">PRESCRIPTION_MEDICINE</div>
+            <span class="weak-partial-key">Composite PK: (Rx_ID, Med_ID)</span>
+          </div>
+          <div class="weak-details-col">
+            <div class="weak-details-label">Attributes &amp; Rule</div>
+            <div class="weak-details-text"><strong>Dosage, Frequency.</strong> Resolves M:N between prescriptions and medications. A line item cannot exist without both a valid prescription and a valid medication record. Both FKs are NOT NULL.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 RELATIONSHIPS & CARDINALITY TABLE -->
+  <div class="slide" id="s10">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">10</div>
+        <div class="banner-text">
+          <div class="banner-section">Conceptual Model // Cardinality Reference</div>
+          <div class="banner-title">Relationships &amp; Cardinality Summary</div>
+          <div class="banner-desc">Complete table of all entity relationships, their verb phrases, cardinality type, and the enforcement mechanism used in the relational schema.</div>
+        </div>
+      </div>
+      <div class="rel-table-wrap">
+        <table class="rel-table">
+          <thead>
+            <tr>
+              <th>Entity Pair</th>
+              <th>Verb Phrase</th>
+              <th>Cardinality</th>
+              <th>Implementation / Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rel-entity-pair">HOSPITAL → DEPARTMENT</td>
+              <td class="rel-verb">has</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Hospital_ID in DEPARTMENT. Each dept belongs to exactly one hospital.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">HOSPITAL → WARD</td>
+              <td class="rel-verb">contains</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Hospital_ID in WARD. A hospital manages many wards with distinct bed counts.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">HOSPITAL → AMBULANCE</td>
+              <td class="rel-verb">owns</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Hospital_ID in AMBULANCE. Fleet registry per facility.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">DOCTOR ↔ DEPARTMENT</td>
+              <td class="rel-verb">works in</td>
+              <td><span class="rel-card-badge m-n">M : N</span></td>
+              <td class="rel-note-cell">Resolved via DOCTOR_DEPARTMENT bridge (Doctor_ID, Dept_ID composite PK + FK).</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">PATIENT → APPOINTMENT</td>
+              <td class="rel-verb">schedules</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Patient_ID + Doctor_ID in APPOINTMENT. Multiple OPD visits per patient.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">PATIENT → ADMISSION</td>
+              <td class="rel-verb">admitted to</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Patient_ID + Ward_ID. Tracks inpatient stays with admit/discharge dates.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">PATIENT → SURGERY</td>
+              <td class="rel-verb">undergoes</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Patient_ID + Doctor_ID. Multiple surgeries per patient logged with OT room.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">PRESCRIPTION ↔ MEDICATION</td>
+              <td class="rel-verb">contains</td>
+              <td><span class="rel-card-badge m-n">M : N</span></td>
+              <td class="rel-note-cell">PRESCRIPTION_MEDICINE junction (Rx_ID, Med_ID PK). Dosage &amp; frequency stored here.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">PATIENT → INSURANCE_POLICY</td>
+              <td class="rel-verb">holds</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">FK Patient_ID in INSURANCE_POLICY. Supports multi-policy coverage per patient.</td>
+            </tr>
+            <tr>
+              <td class="rel-entity-pair">AMBULANCE → DISPATCH</td>
+              <td class="rel-verb">deploys</td>
+              <td><span class="rel-card-badge one-n">1 : N</span></td>
+              <td class="rel-note-cell">Weak entity. FK Amb_ID (ON DELETE CASCADE). Real-time dispatch log.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 ER DIAGRAM -->
+  <div class="slide" id="s11">
+    <div class="layout-std" style="flex:1;">
+      <div class="slide-banner">
+        <div class="banner-num">11</div>
         <div class="banner-text">
           <div class="banner-section">Conceptual Model // Visual Schema</div>
           <div class="banner-title">Complete Entity-Relationship (ER) Model Diagram</div>
@@ -1069,16 +1318,16 @@
       </div>
       <div class="er-viewer-container" id="erViewer">
         <div class="er-zoom-badge">🔍 Hover to Zoom &amp; Inspect Details</div>
-        <img id="erImg" src="/design-previews/er-diagram.svg" alt="Complete Relational ER Diagram" onerror="this.src='/design-previews/er-diagram.png'" />
+        <img id="erImg" src="design-previews/er-diagram.svg" alt="Complete Relational ER Diagram" onerror="this.src='design-previews/er-diagram.png'" />
       </div>
     </div>
   </div>
 
-  <!-- 10 RELATIONAL SCHEMA (ELABORATED TO MEET ALL REQUIREMENTS FROM PDF & CHATGPT) -->
-  <div class="slide" id="s10">
+  <!-- 12 RELATIONAL SCHEMA (ELABORATED TO MEET ALL REQUIREMENTS FROM PDF & CHATGPT) -->
+  <div class="slide" id="s12">
     <div class="layout-std" style="flex:1;">
       <div class="slide-banner">
-        <div class="banner-num">10</div>
+        <div class="banner-num">12</div>
         <div class="banner-text">
           <div class="banner-section">Relational Schema // DDL Mapping</div>
           <div class="banner-title">ER Entities to Relational SQL Table Schemas</div>
@@ -1139,11 +1388,11 @@
     </div>
   </div>
 
-  <!-- 11 BUSINESS RULES & CONSTRAINTS -->
-  <div class="slide" id="s11">
+  <!-- 13 BUSINESS RULES & CONSTRAINTS -->
+  <div class="slide" id="s13">
     <div class="layout-std" style="flex:1;">
       <div class="slide-banner">
-        <div class="banner-num">11</div>
+        <div class="banner-num">13</div>
         <div class="banner-text">
           <div class="banner-section">Business Rules // Database Constraints &amp; Conclusion</div>
           <div class="banner-title">Enterprise Business Rules &amp; Relational Constraints</div>
@@ -1191,8 +1440,8 @@
     </div>
   </div>
 
-  <!-- 12 THANK YOU SLIDE -->
-  <div class="slide" id="s12">
+  <!-- 14 THANK YOU SLIDE -->
+  <div class="slide" id="s14">
     <div class="layout-title" style="flex:1;">
       <div class="title-l" style="background: var(--slate); justify-content: center; align-items: flex-start; gap: 2rem;">
         <div class="title-l-label">SE 223 · Database Design Project</div>
@@ -1202,8 +1451,14 @@
           Integrated Healthcare &amp; Hospital Network Database
         </div>
       </div>
-      <div class="title-r" style="justify-content: center; gap: 2.5rem;">
+      <div class="title-r" style="justify-content: center; gap: 1.5rem;">
         <div>
+          <div class="design-stats">
+            <div class="stat-box"><div class="stat-num">13</div><div class="stat-label">Entities</div></div>
+            <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">Weak / Assoc.</div></div>
+            <div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">Relationships</div></div>
+            <div class="stat-box"><div class="stat-num">3NF</div><div class="stat-label">Normal Form</div></div>
+          </div>
           <div class="title-r-label">Project Team — Group 2</div>
           <div class="member-list">
             <div class="m-item">Md. Sourav Rana <span class="m-id">ID: 252-35-602</span></div>
@@ -1237,14 +1492,14 @@
       <button class="bbar-btn" onclick="navigate(1)" title="Next Slide">&#8594;</button>
     </div>
     <div class="progress-track"><div class="progress-f" id="pFill"></div></div>
-    <div class="bbar-counter" id="counter">01 / 12</div>
+    <div class="bbar-counter" id="counter">01 / 14</div>
     <div class="bbar-key">&uarr;&darr; or &larr;&rarr; arrow keys to navigate</div>
   </div>
 
 </div>
 
 <script>
-  const total = 12;
+  const total = 14;
   let cur = 1;
   let activeCardIdx = -1;
 
@@ -1280,7 +1535,7 @@
     activeCardIdx = -1;
     updateKeyboardHover([]);
 
-    if (cur === 11) {
+    if (cur === 13) {
       const rules = document.querySelectorAll('.rule-stripe');
       rules.forEach((r, i) => setTimeout(() => r.classList.add('visible'), i * 100));
     }
