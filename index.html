@@ -435,39 +435,59 @@
     /* ════════════════════════
        RELATIONSHIPS TABLE SLIDE (SLIDE 10)
        ════════════════════════ */
-    .rel-table-wrap {
-      flex: 1; padding: 0.8rem 3.5rem 1.5rem; overflow: auto;
+    .rel-stripes {
+      flex: 1; display: flex; flex-direction: column; gap: 0.45rem;
+      padding: 0.8rem 3.5rem 1.5rem;
     }
-    .rel-table {
-      width: 100%; border-collapse: collapse;
-      font-family: var(--body); font-size: 0.9rem;
+    .rel-stripe {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 80px 260px 130px 1fr;
+      border: 1.5px solid var(--line-hi); border-radius: 6px;
+      align-items: stretch; background: white;
+      overflow: hidden;
+      transition: all 0.25s ease;
     }
-    .rel-table thead tr {
-      background: var(--slate); color: white;
+    .rel-stripes:hover .rel-stripe { opacity: 0.35; filter: brightness(0.78); transform: scale(0.99); }
+    .rel-stripes .rel-stripe:hover {
+      opacity: 1 !important; filter: none !important;
+      transform: scale(1.016) translateY(-2px);
+      z-index: 20; border-color: var(--slate);
+      box-shadow: 0 12px 28px rgba(30, 28, 24, 0.16);
     }
-    .rel-table thead th {
-      padding: 0.7rem 1.1rem; text-align: left;
-      font-family: var(--mono); font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
+    .rel-pill-col {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.5rem 0.6rem;
+      border-right: 1.5px solid var(--line);
     }
-    .rel-table tbody tr {
-      border-bottom: 1px solid var(--line);
-      transition: background 0.15s ease;
-    }
-    .rel-table tbody tr:hover { background: var(--blue-lo); }
-    .rel-table tbody td {
-      padding: 0.6rem 1.1rem; vertical-align: middle;
-      color: var(--ink);
-    }
-    .rel-entity-pair { font-family: var(--mono); font-size: 0.82rem; font-weight: 600; color: var(--slate); }
-    .rel-verb { font-style: italic; color: var(--muted-hi); }
     .rel-card-badge {
-      font-family: var(--mono); font-size: 0.75rem; font-weight: 700;
-      padding: 0.2rem 0.6rem; border-radius: 3px; white-space: nowrap;
+      font-family: var(--mono); font-size: 0.78rem; font-weight: 700;
+      padding: 0.3rem 0.65rem; border-radius: 4px; white-space: nowrap; letter-spacing: 0.04em;
     }
     .rel-card-badge.one-n { background: var(--blue-lo); color: var(--blue); border: 1px solid #bfdbfe; }
     .rel-card-badge.m-n { background: var(--amber-lo); color: var(--amber); border: 1px solid #fde68a; }
-    .rel-note-cell { font-size: 0.83rem; color: var(--muted-hi); line-height: 1.4; }
+    .rel-entities-col {
+      background: var(--slate); color: white;
+      padding: 0.6rem 1.2rem;
+      display: flex; align-items: center;
+      border-right: 1.5px solid rgba(255,255,255,0.1);
+    }
+    .rel-entity-pair {
+      font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+      line-height: 1.45;
+    }
+    .rel-verb-col {
+      display: flex; align-items: center;
+      padding: 0.6rem 1.2rem;
+      border-right: 1.5px solid var(--line);
+      font-style: italic; font-size: 0.95rem; color: var(--muted-hi);
+    }
+    .rel-note-col {
+      display: flex; align-items: center;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.84rem; color: var(--muted-hi); line-height: 1.45;
+    }
+    .rel-note-col strong { color: var(--ink); font-weight: 600; font-style: normal; }
 
     /* ════════════════════════
        DESIGN SUMMARY STATS (CLOSING SLIDE)
@@ -1228,79 +1248,67 @@
           <div class="banner-desc">Complete table of all entity relationships, their verb phrases, cardinality type, and the enforcement mechanism used in the relational schema.</div>
         </div>
       </div>
-      <div class="rel-table-wrap">
-        <table class="rel-table">
-          <thead>
-            <tr>
-              <th>Entity Pair</th>
-              <th>Verb Phrase</th>
-              <th>Cardinality</th>
-              <th>Implementation / Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="rel-entity-pair">HOSPITAL → DEPARTMENT</td>
-              <td class="rel-verb">has</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Hospital_ID in DEPARTMENT. Each dept belongs to exactly one hospital.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">HOSPITAL → WARD</td>
-              <td class="rel-verb">contains</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Hospital_ID in WARD. A hospital manages many wards with distinct bed counts.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">HOSPITAL → AMBULANCE</td>
-              <td class="rel-verb">owns</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Hospital_ID in AMBULANCE. Fleet registry per facility.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">DOCTOR ↔ DEPARTMENT</td>
-              <td class="rel-verb">works in</td>
-              <td><span class="rel-card-badge m-n">M : N</span></td>
-              <td class="rel-note-cell">Resolved via DOCTOR_DEPARTMENT bridge (Doctor_ID, Dept_ID composite PK + FK).</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">PATIENT → APPOINTMENT</td>
-              <td class="rel-verb">schedules</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Patient_ID + Doctor_ID in APPOINTMENT. Multiple OPD visits per patient.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">PATIENT → ADMISSION</td>
-              <td class="rel-verb">admitted to</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Patient_ID + Ward_ID. Tracks inpatient stays with admit/discharge dates.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">PATIENT → SURGERY</td>
-              <td class="rel-verb">undergoes</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Patient_ID + Doctor_ID. Multiple surgeries per patient logged with OT room.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">PRESCRIPTION ↔ MEDICATION</td>
-              <td class="rel-verb">contains</td>
-              <td><span class="rel-card-badge m-n">M : N</span></td>
-              <td class="rel-note-cell">PRESCRIPTION_MEDICINE junction (Rx_ID, Med_ID PK). Dosage &amp; frequency stored here.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">PATIENT → INSURANCE_POLICY</td>
-              <td class="rel-verb">holds</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">FK Patient_ID in INSURANCE_POLICY. Supports multi-policy coverage per patient.</td>
-            </tr>
-            <tr>
-              <td class="rel-entity-pair">AMBULANCE → DISPATCH</td>
-              <td class="rel-verb">deploys</td>
-              <td><span class="rel-card-badge one-n">1 : N</span></td>
-              <td class="rel-note-cell">Weak entity. FK Amb_ID (ON DELETE CASCADE). Real-time dispatch log.</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="rel-stripes">
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → DEPARTMENT</span></div>
+          <div class="rel-verb-col">has</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in DEPARTMENT. Each department belongs to exactly one hospital.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → WARD</span></div>
+          <div class="rel-verb-col">contains</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in WARD. A hospital manages many wards with distinct bed capacities.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">HOSPITAL → AMBULANCE</span></div>
+          <div class="rel-verb-col">owns</div>
+          <div class="rel-note-col"><strong>FK Hospital_ID </strong>in AMBULANCE. Fleet registry scoped per hospital facility.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge m-n">M : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">DOCTOR ↔ DEPARTMENT</span></div>
+          <div class="rel-verb-col">works in</div>
+          <div class="rel-note-col">Resolved via <strong>DOCTOR_DEPARTMENT </strong>bridge table (Doctor_ID, Dept_ID composite PK + FK).</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → APPOINTMENT</span></div>
+          <div class="rel-verb-col">schedules</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID </strong>in APPOINTMENT. Tracks multiple OPD visits per patient over time.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → ADMISSION</span></div>
+          <div class="rel-verb-col">admitted to</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Ward_ID.</strong> Tracks inpatient stays with admit and discharge dates.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → SURGERY</span></div>
+          <div class="rel-verb-col">undergoes</div>
+          <div class="rel-note-col"><strong>FK Patient_ID + Doctor_ID.</strong> Multiple surgeries per patient logged with OT room assignment.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge m-n">M : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">PRESCRIPTION ↔ MEDICATION</span></div>
+          <div class="rel-verb-col">contains</div>
+          <div class="rel-note-col"><strong>PRESCRIPTION_MEDICINE </strong>junction (Rx_ID, Med_ID composite PK). Dosage &amp; frequency stored as line items.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">PATIENT → INSURANCE_POLICY</span></div>
+          <div class="rel-verb-col">holds</div>
+          <div class="rel-note-col"><strong>FK Patient_ID </strong>in INSURANCE_POLICY. Supports multi-policy coverage per patient.</div>
+        </div>
+        <div class="rel-stripe">
+          <div class="rel-pill-col"><span class="rel-card-badge one-n">1 : N</span></div>
+          <div class="rel-entities-col"><span class="rel-entity-pair">AMBULANCE → DISPATCH</span></div>
+          <div class="rel-verb-col">deploys</div>
+          <div class="rel-note-col">Weak entity dependency. <strong>FK Amb_ID (ON DELETE CASCADE).</strong> Real-time emergency dispatch log.</div>
+        </div>
       </div>
     </div>
   </div>
